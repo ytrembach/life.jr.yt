@@ -1,12 +1,8 @@
 package org.yt.jr.projects.utils.logs;
 
-import org.yt.jr.projects.utils.Config;
-
 import java.io.BufferedWriter;
-import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
