@@ -6,33 +6,34 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class Logger  {
-    private static Logger LOGGER = null;
-
+public class Logger {
+    private static boolean initialized = false;
     private static BufferedWriter writer;
 
-    private Logger(String path) {
-        try {
-            writer = new BufferedWriter(new FileWriter(path, true));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void initLogger(String path) {
-        if (LOGGER == null) {
-            LOGGER = new Logger(path);
+        if (!initialized) {
+            try {
+                writer = new BufferedWriter(new FileWriter(path, true));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            initialized = true;
+            Log(LogSources.SYSTEM, LogLevels.INFO, "logger started");
+        } else {
+            Log(LogSources.SYSTEM, LogLevels.ERROR, "logger already started");
         }
-        Log(LogSources.SYSTEM, LogLevels.INFO, "started");
     }
 
     public static void closeLogger() {
+        Log(LogSources.SYSTEM, LogLevels.INFO, "logger stopped");
+        initialized = false;
         try {
             writer.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
     public static void Log(LogSources source, LogLevels level, String message) {
         LocalDateTime localDateTime = LocalDateTime.now();
         String logMessage = String.format("%s %s %s: %s\n",
@@ -40,6 +41,11 @@ public class Logger  {
                 source.getMessage(),
                 level.getMessage(),
                 message);
+
+        if (!initialized) {
+            throw new RuntimeException(String.format("Logger doesn't initialized yet, it cannot log this message: %s",
+                    logMessage));
+        }
         try {
             writer.write(logMessage);
         } catch (IOException e) {
