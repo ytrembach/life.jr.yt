@@ -3,8 +3,8 @@ package org.yt.jr.projects.maps;
 import org.yt.jr.projects.creatures.CreatureList;
 
 public class Location {
-    private int row;
-    private int col;
+    final private int row;
+    final private int col;
     // neighboring locations
     private Location up, down, left, right;
     private CreatureList habitants;
