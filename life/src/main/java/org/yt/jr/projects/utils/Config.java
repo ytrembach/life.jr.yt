@@ -10,18 +10,24 @@ public class Config {
     }
 
     public int getPoolSize(CreaturesTypes type) {
-        final Map<CreaturesTypes, Integer> sizes = Map.of(CreaturesTypes.PLANTS, 4);
+        final Map<CreaturesTypes, Integer> sizes = Map.of(
+                CreaturesTypes.PLANTS, 4
+        );
 
         return sizes.get(type);
     }
 
     public long getTurnDurationInSecond(CreaturesTypes type) {
-        final Map<CreaturesTypes, Long> durations = Map.of(CreaturesTypes.ALL, 1L);
+        final Map<CreaturesTypes, Long> durations = Map.of(
+                CreaturesTypes.ALL, 1L
+        );
         return durations.get(type);
     }
 
     public Double getReproduceProbability(CreaturesTypes type) {
-        final Map<CreaturesTypes, Double> probabilities = Map.of(CreaturesTypes.PLANTS, 0.1);
+        final Map<CreaturesTypes, Double> probabilities = Map.of(
+                CreaturesTypes.PLANTS, 0.1
+        );
 
         return probabilities.get(type);
     }
