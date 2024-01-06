@@ -6,7 +6,7 @@ public enum LogLevels {
     ERROR("error"),
     FATAL("fatal");
 
-    private String message;
+    final private String message;
 
     LogLevels(String message) {
         this.message = message;
