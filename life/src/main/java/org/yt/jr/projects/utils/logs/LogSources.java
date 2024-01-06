@@ -4,7 +4,7 @@ public enum LogSources {
     SYSTEM("system"),
     CREATURE("creature");
 
-    private String message;
+    final private String message;
 
     LogSources(String message) {
         this.message = message;
