@@ -6,9 +6,9 @@ import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 
 public class WorldMap {
-    int width;
-    int height;
-    private Location[][] grid;
+    final int width;
+    final int height;
+    final private Location[][] grid;
 
     private static WorldMap WorldMAP;
 
