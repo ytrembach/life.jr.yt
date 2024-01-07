@@ -3,6 +3,7 @@ package org.yt.jr.projects.creatures;
 import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
+import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
@@ -18,13 +19,17 @@ public abstract class Creature implements Runnable {
     final protected int id;
     protected int health;
     protected int age;
+    protected int turnsToReproduce;
     protected Location location;
 
     public Creature(CreaturesTypes type, int health) {
         this.type = type;
         this.id = lastId.addAndGet(1);
+
         this.health = health;
         this.age = 0;
+        resetTurnsToReproduce();
+
         Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s created", this));
     }
 
@@ -34,6 +39,14 @@ public abstract class Creature implements Runnable {
 
     public int getId() {
         return id;
+    }
+
+    public int getTurnsToReproduce() {
+        return turnsToReproduce;
+    }
+
+    public void resetTurnsToReproduce() {
+        this.turnsToReproduce = Config.CONFIG.getTurnsToReproduceDefault(type);
     }
 
     public Location getLocation() {
@@ -62,7 +75,7 @@ public abstract class Creature implements Runnable {
         reproduce();
     }
 
-    abstract void reproduce();
+    public abstract void reproduce();
 
     protected void bornChild() {
         final Creature creature = CreatureFactory.CREATURE_FACTORY.getCreature(type).apply(CHILD_HEALTH);
