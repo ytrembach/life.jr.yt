@@ -18,17 +18,21 @@ public class LifeCycle implements AutoCloseable {
 
     final public static Map<CreaturesTypes,LifeCycle> LIFECYCLES = new HashMap<>();
 
-    final private CreaturesTypes type;
+    final private LifeCycleTypes type;
     final private Map<Creature, ScheduledFuture<?>> liveCreatures;
 
     final private ScheduledExecutorService executorService;
 
-    public LifeCycle(CreaturesTypes type) {
+    public LifeCycle(LifeCycleTypes type) {
         this.type = type;
         liveCreatures = new HashMap<>();
 
         int poolSize = Config.CONFIG.getPoolSize(type);
         executorService = Executors.newScheduledThreadPool(poolSize);
+    }
+
+    public LifeCycleTypes getType() {
+        return type;
     }
 
     @Override
