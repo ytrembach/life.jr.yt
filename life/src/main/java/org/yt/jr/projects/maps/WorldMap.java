@@ -7,7 +7,7 @@ import org.yt.jr.projects.utils.logs.Logger;
 
 import java.util.Iterator;
 
-public class WorldMap implements Iterable {
+public class WorldMap implements Iterable<Location> {
     final private int width;
     final private int height;
     final private Location[][] grid;

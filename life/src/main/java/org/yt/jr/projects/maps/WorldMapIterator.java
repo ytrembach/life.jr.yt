@@ -17,11 +17,7 @@ public class WorldMapIterator implements Iterator<Location> {
 
     @Override
     public boolean hasNext() {
-        if (currRow == map.getWidth()) {
-            return false;
-        } else {
-            return true;
-        }
+        return currRow == map.getWidth() ? false : true;
     }
 
     @Override
