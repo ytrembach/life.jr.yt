@@ -6,7 +6,7 @@ public enum LifeCycleTypes {
     HERBIVOROUS,
     CARNIVOROUS;
 
-    private CreaturesTypes[] types;
+    final private CreaturesTypes[] types;
 
     LifeCycleTypes(CreaturesTypes... types) {
         this.types = types;
