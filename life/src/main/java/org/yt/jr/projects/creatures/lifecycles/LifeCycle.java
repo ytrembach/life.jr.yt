@@ -1,13 +1,10 @@
 package org.yt.jr.projects.creatures.lifecycles;
 
 import org.yt.jr.projects.creatures.Creature;
-import org.yt.jr.projects.creatures.CreatureList;
-import org.yt.jr.projects.creatures.Plant;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;

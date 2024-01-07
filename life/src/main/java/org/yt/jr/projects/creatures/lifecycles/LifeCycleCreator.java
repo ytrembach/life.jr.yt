@@ -3,7 +3,6 @@ package org.yt.jr.projects.creatures.lifecycles;
 import org.yt.jr.projects.creatures.CreatureList;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.maps.WorldMap;
-import org.yt.jr.projects.maps.WorldMapIterator;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 
