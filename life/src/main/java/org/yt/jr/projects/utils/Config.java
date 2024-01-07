@@ -20,7 +20,7 @@ public class Config {
     public int getPoolSize(LifeCycleTypes type) {
         int valueDefault = 4;
         final Map<LifeCycleTypes, Integer> poolSizes = Map.of(
-                LifeCycleTypes.PLANTS, 4
+
         );
         return poolSizes.getOrDefault(type, valueDefault);
     }
@@ -28,7 +28,8 @@ public class Config {
     public long getTurnDurationInSecond(LifeCycleTypes type) {
         long valueDefault = 1;
         final Map<LifeCycleTypes, Long> durations = Map.of(
-                LifeCycleTypes.PLANTS, 1L
+                LifeCycleTypes.PLANTS, 5L,
+                LifeCycleTypes.HERBIVORES, 1L
         );
         return durations.getOrDefault(type, valueDefault );
     }
@@ -38,25 +39,33 @@ public class Config {
         final Map<CreaturesTypes, Integer> maxNumbers = Map.of(
                 CreaturesTypes.PLANTS, 200
         );
-
         return maxNumbers.getOrDefault(type, valueDefault);
     }
 
     public Double getInitCreaturePerLocationShare(CreaturesTypes type) {
         double valueDefault = 0.1;
         final Map<CreaturesTypes, Double> shares = Map.of(
-                CreaturesTypes.PLANTS, 0.2
+                CreaturesTypes.PLANTS, 0.25
         );
-
         return shares.getOrDefault(type, valueDefault);
     }
 
     public Double getReproduceProbability(CreaturesTypes type) {
         double valueDefault = 0.1;
         final Map<CreaturesTypes, Double> probabilities = Map.of(
-                CreaturesTypes.PLANTS, 0.1
+                CreaturesTypes.PLANTS, 0.05,
+                CreaturesTypes.HORSE, 0.15,
+                CreaturesTypes.DEER, 0.1
         );
+        return probabilities.getOrDefault(type, valueDefault);
+    }
 
+    public int getTurnsToReproduceDefault(CreaturesTypes type) {
+        int valueDefault = 10;
+        final Map<CreaturesTypes, Integer> probabilities = Map.of(
+                CreaturesTypes.HORSE, 2 ,
+                CreaturesTypes.DEER, 3
+        );
         return probabilities.getOrDefault(type, valueDefault);
     }
 
