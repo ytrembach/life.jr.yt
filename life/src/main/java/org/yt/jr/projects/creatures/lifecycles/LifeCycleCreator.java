@@ -7,8 +7,6 @@ import org.yt.jr.projects.maps.WorldMap;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 
-import java.util.Iterator;
-
 public class LifeCycleCreator {
     public static LifeCycle createLifeCycle(final CreaturesTypes type) {
         final LifeCycle lifeCycle = new LifeCycle(type);
