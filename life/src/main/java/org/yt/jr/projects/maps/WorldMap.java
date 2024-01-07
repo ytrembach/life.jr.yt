@@ -4,8 +4,8 @@ import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
-
 import java.util.Iterator;
+import static org.yt.jr.projects.maps.LocationNeighbors.*;
 
 public class WorldMap implements Iterable<Location> {
     final private int width;
@@ -44,27 +44,27 @@ public class WorldMap implements Iterable<Location> {
         Location cell = grid[row][col];
 
         Location up = row > 0 ? grid[row - 1][col] : null;
-        cell.setUp(up);
+        cell.setNeighbor(UP,up);
         if (up != null) {
-            up.setDown(cell);
+            up.setNeighbor(DOWN,cell);
         }
 
         Location down = row < height - 1 ? grid[row + 1][col] : null;
-        cell.setDown(down);
+        cell.setNeighbor(DOWN,down);
         if (down != null) {
-            down.setUp(cell);
+            down.setNeighbor(UP,cell);
         }
 
         Location left = col > 0 ? grid[row][col - 1] : null;
-        cell.setLeft(left);
+        cell.setNeighbor(LEFT,left);
         if (left != null) {
-            left.setRight(cell);
+            left.setNeighbor(RIGHT,cell);
         }
 
         Location right = col < width - 1 ? grid[row][col + 1] : null;
-        cell.setRight(right);
+        cell.setNeighbor(RIGHT,right);
         if (right != null) {
-            right.setLeft(cell);
+            right.setNeighbor(LEFT,cell);
         }
     }
 
@@ -76,7 +76,7 @@ public class WorldMap implements Iterable<Location> {
         return height;
     }
 
-    Location getLocation(int row, int col) {
+    public Location getLocation(int row, int col) {
         return grid[row][col];
     }
 
