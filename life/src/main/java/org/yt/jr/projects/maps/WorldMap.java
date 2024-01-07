@@ -5,9 +5,11 @@ import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 
-public class WorldMap {
-    final int width;
-    final int height;
+import java.util.Iterator;
+
+public class WorldMap implements Iterable {
+    final private int width;
+    final private int height;
     final private Location[][] grid;
 
     private static WorldMap WorldMAP;
@@ -66,5 +68,20 @@ public class WorldMap {
         }
     }
 
+    int getWidth() {
+        return width;
+    }
 
+    int getHeight() {
+        return height;
+    }
+
+    Location getLocation(int row, int col) {
+        return grid[row][col];
+    }
+
+    @Override
+    public Iterator<Location> iterator() {
+        return new WorldMapIterator(this);
+    }
 }
