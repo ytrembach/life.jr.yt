@@ -1,7 +1,5 @@
 package org.yt.jr.projects.creatures;
 
-import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
-import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
@@ -16,14 +14,15 @@ public class Plant extends Creature {
 
     @Override
     void reproduce() {
-        Double probability = Config.CONFIG.getReproduceProbability(CreaturesTypes.PLANTS);
-        Double random = ThreadLocalRandom.current().nextDouble();
-        Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
-                String.format("trying to reproduce %s (%f / %f)", this, random, probability));
+        if (!location.isSpaceAvailable(type)) {
+            Logger.Log(LogSources.CREATURE,LogLevels.DEBUG,
+                    String.format("No slots for %s on %s",type,location));
+            return;
+        }
+        double probability = Config.CONFIG.getReproduceProbability(CreaturesTypes.PLANTS);
+        double random = ThreadLocalRandom.current().nextDouble();
         if (random < probability) {
-            final Creature creature = CreatureFactory.CREATURE_FACTORY.getCreature(type).apply(CHILD_HEALTH);
-            location.addCreature(creature);
-            LifeCycle.LIFECYCLES.get(type).addCreature(creature);
+            bornChild();
         }
     }
 }
