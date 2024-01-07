@@ -24,7 +24,7 @@ public class World {
 
             prompt();
             userInput = console.readLine();
-            while (!"EXIT".equals(userInput.toUpperCase())) {
+            while (!"EXIT".equalsIgnoreCase(userInput)) {
                 String[] items = userInput.split("\s+");
                 if (items.length == 2) {
                     try {
