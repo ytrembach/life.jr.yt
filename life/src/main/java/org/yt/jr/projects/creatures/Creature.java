@@ -1,5 +1,7 @@
 package org.yt.jr.projects.creatures;
 
+import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
+import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
@@ -23,7 +25,7 @@ public abstract class Creature implements Runnable {
         this.id = lastId.addAndGet(1);
         this.health = health;
         this.age = 0;
-        Logger.Log(LogSources.CREATURE, LogLevels.INFO,String.format("%s created",this));
+        Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s created", this));
     }
 
     public CreaturesTypes getType() {
@@ -62,5 +64,17 @@ public abstract class Creature implements Runnable {
 
     abstract void reproduce();
 
+    protected void bornChild() {
+        final Creature creature = CreatureFactory.CREATURE_FACTORY.getCreature(type).apply(CHILD_HEALTH);
+        synchronized (creature) {
+            synchronized (location) {
+                location.addCreature(creature);
+            }
 
+            LifeCycle lifeCycle = LifeCycle.LIFECYCLES.get(type);
+            synchronized (lifeCycle) {
+                lifeCycle.addCreature(creature);
+            }
+        }
+    }
 }
