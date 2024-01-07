@@ -56,7 +56,7 @@ public class LifeCycle implements AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close()  {
         executorService.shutdown();
     }
 }
