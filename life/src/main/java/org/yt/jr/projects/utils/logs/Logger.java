@@ -10,12 +10,12 @@ import java.time.format.DateTimeFormatter;
 
 public class Logger {
     private static boolean initialized = false;
-    private static BufferedWriter writer;
+    private static FileWriter writer;
 
     public static void initLogger(String path) {
         if (!initialized) {
             try {
-                writer = new BufferedWriter(new FileWriter(path, true));
+                writer = new FileWriter(path, true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -41,8 +41,10 @@ public class Logger {
             return;
         }
         LocalDateTime localDateTime = LocalDateTime.now();
-        String logMessage = String.format("%s %s %s: %s\n",
+        long threadId = Thread.currentThread().getId();
+        String logMessage = String.format("%s T%s %s %s: %s\n",
                 localDateTime.format(DateTimeFormatter.ISO_DATE_TIME),
+                threadId,
                 source.getMessage(),
                 level.getMessage(),
                 message);
@@ -53,6 +55,7 @@ public class Logger {
         }
         try {
             writer.write(logMessage);
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
