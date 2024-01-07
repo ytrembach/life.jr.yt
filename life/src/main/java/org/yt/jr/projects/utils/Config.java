@@ -24,6 +24,14 @@ public class Config {
         return durations.get(type);
     }
 
+    public int getMaxCreaturePerLocation(CreaturesTypes type) {
+        final Map<CreaturesTypes, Integer> maxNumbers = Map.of(
+                CreaturesTypes.PLANTS, 200
+        );
+
+        return maxNumbers.get(type);
+    }
+
     public Double getReproduceProbability(CreaturesTypes type) {
         final Map<CreaturesTypes, Double> probabilities = Map.of(
                 CreaturesTypes.PLANTS, 0.1
