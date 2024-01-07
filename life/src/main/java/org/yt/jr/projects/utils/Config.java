@@ -1,5 +1,6 @@
 package org.yt.jr.projects.utils;
 
+import org.yt.jr.projects.creatures.lifecycles.LifeCycleTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
 
 import java.util.Map;
@@ -16,36 +17,47 @@ public class Config {
         return  LogLevels.DEBUG;
     }
 
-    public int getPoolSize(CreaturesTypes type) {
-        final Map<CreaturesTypes, Integer> poolSizes = Map.of(
-                CreaturesTypes.ALL, 4
+    public int getPoolSize(LifeCycleTypes type) {
+        int valueDefault = 4;
+        final Map<LifeCycleTypes, Integer> poolSizes = Map.of(
+                LifeCycleTypes.PLANTS, 4
         );
-
-        return poolSizes.getOrDefault(type, poolSizes.get(CreaturesTypes.ALL));
+        return poolSizes.getOrDefault(type, valueDefault);
     }
 
-    public long getTurnDurationInSecond(CreaturesTypes type) {
-        final Map<CreaturesTypes, Long> durations = Map.of(
-                CreaturesTypes.ALL, 1L
+    public long getTurnDurationInSecond(LifeCycleTypes type) {
+        long valueDefault = 1;
+        final Map<LifeCycleTypes, Long> durations = Map.of(
+                LifeCycleTypes.PLANTS, 1L
         );
-        return durations.getOrDefault(type, durations.get(CreaturesTypes.ALL) );
+        return durations.getOrDefault(type, valueDefault );
     }
 
     public int getMaxCreaturePerLocation(CreaturesTypes type) {
+        int valueDefault = 10;
         final Map<CreaturesTypes, Integer> maxNumbers = Map.of(
-                CreaturesTypes.ALL, 10,
                 CreaturesTypes.PLANTS, 200
         );
 
-        return maxNumbers.getOrDefault(type, maxNumbers.get(CreaturesTypes.ALL));
+        return maxNumbers.getOrDefault(type, valueDefault);
+    }
+
+    public Double getInitCreaturePerLocationShare(CreaturesTypes type) {
+        double valueDefault = 0.1;
+        final Map<CreaturesTypes, Double> shares = Map.of(
+                CreaturesTypes.PLANTS, 0.2
+        );
+
+        return shares.getOrDefault(type, valueDefault);
     }
 
     public Double getReproduceProbability(CreaturesTypes type) {
+        double valueDefault = 0.1;
         final Map<CreaturesTypes, Double> probabilities = Map.of(
-                CreaturesTypes.ALL, 0.1
+                CreaturesTypes.PLANTS, 0.1
         );
 
-        return probabilities.getOrDefault(type, probabilities.get(CreaturesTypes.ALL));
+        return probabilities.getOrDefault(type, valueDefault);
     }
 
     public int getMapWidth() {
