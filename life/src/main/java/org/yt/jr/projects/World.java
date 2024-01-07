@@ -2,9 +2,9 @@ package org.yt.jr.projects;
 
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleCreator;
+import org.yt.jr.projects.creatures.lifecycles.LifeCycleTypes;
 import org.yt.jr.projects.maps.WorldMap;
 import org.yt.jr.projects.utils.Config;
-import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
@@ -18,7 +18,7 @@ public class World {
 
         WorldMap worldMap = WorldMap.getMap();
 
-        try (LifeCycle plantsLifeCycle = LifeCycleCreator.createLifeCycle(CreaturesTypes.PLANTS)) {
+        try (LifeCycle plantsLifeCycle = LifeCycleCreator.createLifeCycle(LifeCycleTypes.PLANTS)) {
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             String userInput;
 
@@ -31,8 +31,8 @@ public class World {
                         int row = Integer.parseInt(items[0]);
                         int col = Integer.parseInt(items[1]);
 
-                        if (row > 0 && row < Config.CONFIG.getMapHeight()
-                                && col > 0 && col < Config.CONFIG.getMapWidth()) {
+                        if (row >= 0 && row < Config.CONFIG.getMapHeight()
+                                && col >= 0 && col < Config.CONFIG.getMapWidth()) {
                             System.out.println(worldMap.getLocation(row, col));
                         } else {
                             System.out.printf("Location with row %d and col %s is outside the map", row, col);
