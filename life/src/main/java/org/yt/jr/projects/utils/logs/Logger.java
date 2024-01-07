@@ -1,5 +1,7 @@
 package org.yt.jr.projects.utils.logs;
 
+import org.yt.jr.projects.utils.Config;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -35,6 +37,9 @@ public class Logger {
     }
 
     public static void Log(LogSources source, LogLevels level, String message) {
+        if (level.ordinal() < Config.CONFIG.getLogLevel().ordinal()) {
+            return;
+        }
         LocalDateTime localDateTime = LocalDateTime.now();
         String logMessage = String.format("%s %s %s: %s\n",
                 localDateTime.format(DateTimeFormatter.ISO_DATE_TIME),
