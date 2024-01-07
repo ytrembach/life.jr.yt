@@ -18,7 +18,10 @@ public class World {
 
         WorldMap worldMap = WorldMap.getMap();
 
-        try (LifeCycle plantsLifeCycle = LifeCycleCreator.createLifeCycle(LifeCycleTypes.PLANTS)) {
+        try (
+                LifeCycle plantsLifeCycle = LifeCycleCreator.createLifeCycle(LifeCycleTypes.PLANTS);
+                LifeCycle herbivoresCycle = LifeCycleCreator.createLifeCycle(LifeCycleTypes.HERBIVORES);
+        ) {
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             String userInput;
 
