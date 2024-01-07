@@ -1,6 +1,5 @@
 package org.yt.jr.projects.creatures;
 
-import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
@@ -57,11 +56,10 @@ public abstract class Animal extends Creature {
     }
 
     public Optional<Animal> findReadyToReproduce() {
-        Optional<Animal> ready = location.getHabitants().stream()
+        return location.getHabitants().stream()
                 .filter(creature -> creature.getType().equals(type))
                 .filter(creature -> creature.getTurnsToReproduce() == 0)
                 .map(creature -> (Animal) creature)
                 .findAny();
-        return ready;
     }
 }
