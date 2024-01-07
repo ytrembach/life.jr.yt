@@ -1,12 +1,13 @@
 package org.yt.jr.projects.maps;
 
 import org.yt.jr.projects.creatures.Creature;
-import org.yt.jr.projects.creatures.CreatureList;
+import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,21 +15,21 @@ public class Location {
     final private int row;
     final private int col;
     // neighboring locations
-    private Map<LocationNeighbors,Location> neighbors;
-    final private CreatureList habitants;
+    final private Map<LocationNeighbors,Location> neighbors;
+    final private ArrayList<Creature> habitants;
 
     final private Map<CreaturesTypes,Integer> creaturesCount;
 
     Location(int row, int col) {
         this.row = row;
         this.col = col;
-        habitants = new CreatureList();
+        habitants = new ArrayList<>();
         neighbors = new HashMap<>();
 
         creaturesCount = new HashMap<>();
     }
 
-    public CreatureList getHabitants() {
+    public ArrayList<Creature> getHabitants() {
         return habitants;
     }
 
@@ -39,8 +40,7 @@ public class Location {
     @Override
     public String toString() {
         return "Location{" +
-                "row=" + row +
-                ", col=" + col +
+                row + "x" + col +
                 ", creaturesCount=" + creaturesCount +
                 '}';
     }
@@ -51,13 +51,13 @@ public class Location {
 
     public void addCreature(Creature creature) {
         CreaturesTypes type = creature.getType();
-        synchronized (creature) {
-            synchronized (this) {
-                habitants.add(creature);
-                creature.setLocation(this);
-                creaturesCount.put(type,creaturesCount.getOrDefault(type,0)+1);
-            }
-        }
+        habitants.add(creature);
+        creature.setLocation(this);
+        creaturesCount.put(type,creaturesCount.getOrDefault(type,0)+1);
         Logger.Log(LogSources.CREATURE, LogLevels.INFO,String.format("%s added to %s",creature, this));
+    }
+
+    public boolean isSpaceAvailable(CreaturesTypes type) {
+        return creaturesCount.get(type) < Config.CONFIG.getMaxCreaturePerLocation(type);
     }
 }
