@@ -13,13 +13,13 @@ public class Plant extends Creature {
     }
 
     @Override
-    void reproduce() {
+    public void reproduce() {
         if (!location.isSpaceAvailable(type)) {
             Logger.Log(LogSources.CREATURE,LogLevels.DEBUG,
                     String.format("No slots for %s on %s",type,location));
             return;
         }
-        double probability = Config.CONFIG.getReproduceProbability(CreaturesTypes.PLANTS);
+        double probability = Config.CONFIG.getReproduceProbability(type);
         double random = ThreadLocalRandom.current().nextDouble();
         if (random < probability) {
             bornChild();
