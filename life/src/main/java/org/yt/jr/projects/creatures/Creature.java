@@ -104,6 +104,9 @@ public abstract class Creature implements Runnable {
     }
 
     private boolean checkTurnsToReproduce(boolean writeLogOnError) {
+        if (type.equals(CreaturesTypes.NONEXISTENT)) {
+            return false;
+        }
         if (turnsToReproduce > 0) {
             if (writeLogOnError) {
                 Logger.Log(LogSources.CREATURE, LogLevels.ERROR,
