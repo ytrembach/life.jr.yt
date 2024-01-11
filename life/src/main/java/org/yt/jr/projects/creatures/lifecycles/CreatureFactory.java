@@ -4,7 +4,7 @@ import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.creatures.Plant;
 import org.yt.jr.projects.creatures.animals.Deer;
 import org.yt.jr.projects.creatures.animals.Horse;
-import org.yt.jr.projects.utils.CreaturesTypes;
+import org.yt.jr.projects.creatures.CreaturesTypes;
 
 import java.util.Map;
 import java.util.function.Function;
