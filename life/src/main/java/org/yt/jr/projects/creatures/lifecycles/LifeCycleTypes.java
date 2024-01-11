@@ -1,20 +1,24 @@
 package org.yt.jr.projects.creatures.lifecycles;
 
-import org.yt.jr.projects.utils.CreaturesTypes;
+import org.yt.jr.projects.creatures.CreaturesTypes;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public enum LifeCycleTypes {
-    PLANTS(CreaturesTypes.PLANTS),
-    HERBIVORES(
-            CreaturesTypes.HORSE,
-            CreaturesTypes.DEER),
-    PREDATORS;
+    EMPTY,
+    PLANTS,
+    HERBIVORES,
+    CARNIVORES;
 
-    final private CreaturesTypes[] types;
+    public List<CreaturesTypes> getTypes() {
+        final List<CreaturesTypes> typesList = new ArrayList<>();
 
-    LifeCycleTypes(CreaturesTypes... types) {
-        this.types = types;
-    }
-
-    public CreaturesTypes[] getTypes() {
-        return types;
+        for (CreaturesTypes creaturesType : CreaturesTypes.values()) {
+            if (this.equals(creaturesType.getLifeCycleType())) {
+                typesList.add(creaturesType);
+            }
+        }
+        return typesList;
     }
 }
