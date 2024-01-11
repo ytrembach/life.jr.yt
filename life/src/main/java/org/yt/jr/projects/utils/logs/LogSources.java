@@ -3,7 +3,8 @@ package org.yt.jr.projects.utils.logs;
 public enum LogSources {
     SYSTEM("system"),
     CREATURE("creature"),
-    LIFECYCLE("lifecycle");
+    LIFECYCLE("lifecycle"),
+    LOCATION("action");
 
     final private String message;
 
