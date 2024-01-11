@@ -13,7 +13,7 @@ public class Logger {
     public static void initLogger(String path) {
         if (!initialized) {
             try {
-                writer = new FileWriter(path, true);
+                writer = new FileWriter(path, false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -38,11 +38,11 @@ public class Logger {
         if (level.ordinal() < Config.CONFIG.getLogLevel().ordinal()) {
             return;
         }
-        LocalDateTime localDateTime = LocalDateTime.now();
-        long threadId = Thread.currentThread().getId();
-        String logMessage = String.format("%s T%s %s %s: %s\n",
-                localDateTime.format(DateTimeFormatter.ISO_DATE_TIME),
-                threadId,
+        LocalDateTime now = LocalDateTime.now();
+        String logMessage = String.format("%s %s%s %s %s: %s\n",
+                now.format(DateTimeFormatter.ISO_DATE_TIME),
+                Thread.currentThread().getName(),
+                Thread.currentThread().getId(),
                 source.getMessage(),
                 level.getMessage(),
                 message);
