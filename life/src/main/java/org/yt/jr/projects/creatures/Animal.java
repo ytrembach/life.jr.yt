@@ -1,65 +1,47 @@
 package org.yt.jr.projects.creatures;
 
+import org.yt.jr.projects.creatures.actions.reproduce.BornAction;
 import org.yt.jr.projects.utils.Config;
-import org.yt.jr.projects.utils.CreaturesTypes;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
+
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal extends Creature {
-
     public Animal(CreaturesTypes type, int health) {
         super(type, health);
     }
 
-    public abstract void move();
-
-    public abstract void eat();
-
     @Override
-    public void reproduce() {
-        if (!location.isSpaceAvailable(type)) {
-            Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
-                    String.format("No slots for %s on %s", type, location));
-            return;
-        }
-
-        if (turnsToReproduce > 0) {
-            synchronized (this) {
-                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("%s could reproduce after %d turns",
-                        this, turnsToReproduce));
-                turnsToReproduce--;
-            }
-            return;
-        }
-
-        double probability = Config.CONFIG.getReproduceProbability(type);
-        double random = ThreadLocalRandom.current().nextDouble();
-        if (random < probability) {
-            Optional<Animal> readyToReproduce = findReadyToReproduce();
-            if (readyToReproduce.isPresent()) {
-                synchronized (this) {
-                    Animal pair = readyToReproduce.get();
-                    if (pair.turnsToReproduce == 0) {
-                        synchronized (pair) {
-                            bornChild();
-                            pair.resetTurnsToReproduce();
-                        }
-                    }
-                    resetTurnsToReproduce();
+    public void tryToReproduce() {
+        if (isReadyToReproduce(false)) {
+            Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("trying to reproduce %s in %s", this, location));
+            double probability = Config.CONFIG.getReproduceProbability(type);
+            if (ThreadLocalRandom.current().nextDouble() < probability) {
+                Optional<Animal> found = findPairToReproduce();
+                if (found.isPresent()) {
+                    Animal pair = found.get();
+                    new BornAction(this, pair).bornChild();
+                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
+                            String.format("%s successfully paired with %s", this, pair));
+                } else {
+                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("pair not found for %s", this));
                 }
+            } else {
+                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("probability failed for %s", this));
             }
         }
     }
 
-    public Optional<Animal> findReadyToReproduce() {
+    private Optional<Animal> findPairToReproduce() {
         return location.getHabitants().stream()
                 .filter(creature -> creature.getType().equals(type))
-                .filter(creature -> creature.getTurnsToReproduce() == 0)
+                .filter(creature -> creature.isReadyToReproduce(false))
                 .map(creature -> (Animal) creature)
+                .filter(creature -> this != creature)
                 .findAny();
     }
 }
