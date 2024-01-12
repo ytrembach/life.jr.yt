@@ -1,6 +1,7 @@
 package org.yt.jr.projects.creatures.actions.reproduce;
 
 import org.yt.jr.projects.creatures.Creature;
+import org.yt.jr.projects.creatures.actions.Action;
 import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
@@ -9,7 +10,7 @@ import org.yt.jr.projects.utils.Config;
 
 import static org.yt.jr.projects.creatures.Creature.*;
 
-public class BornAction {
+public class BornAction extends Action {
     final private Creature firstParent;
     final private Creature secondParent;
     final private Location location;
@@ -24,7 +25,8 @@ public class BornAction {
         this.lifeCycle = LifeCycle.LIFECYCLES.get(childType);
     }
 
-    public void bornChild() {
+    @Override
+    public boolean doAction() {
         final Creature child;
         synchronized (less(firstParent, secondParent)) {
             synchronized (more(firstParent, secondParent)) {
@@ -32,7 +34,7 @@ public class BornAction {
                     if (!firstParent.getLocation().equals(secondParent.getLocation()) ||
                             !firstParent.isReadyToReproduce(true) ||
                             !secondParent.isReadyToReproduce(true)) {
-                        return;
+                        return false;
                     }
                     firstParent.resetTurnsToReproduce();
                     secondParent.resetTurnsToReproduce();
@@ -46,6 +48,7 @@ public class BornAction {
                 }
             }
         }
+        return true;
     }
 
     private boolean parentsHasSameType(Creature firstParent, Creature secondParent) {

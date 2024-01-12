@@ -1,10 +1,11 @@
 package org.yt.jr.projects.creatures.actions.die;
 
 import org.yt.jr.projects.creatures.Creature;
+import org.yt.jr.projects.creatures.actions.Action;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
 
-public class DieAction {
+public class DieAction extends Action {
     final private Creature creature;
     final private Location location;
     final LifeCycle lifeCycle;
@@ -15,7 +16,8 @@ public class DieAction {
         this.lifeCycle = LifeCycle.LIFECYCLES.get(creature.getType());
     }
 
-    public void die() {
+    @Override
+    public boolean doAction() {
         synchronized (creature) {
             synchronized (location) {
                 location.removeCreature(creature);
@@ -24,5 +26,6 @@ public class DieAction {
                 lifeCycle.removeCreature(creature);
             }
         }
+        return true;
     }
 }

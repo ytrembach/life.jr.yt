@@ -1,13 +1,14 @@
 package org.yt.jr.projects.creatures.actions.reproduce;
 
 import org.yt.jr.projects.creatures.Creature;
+import org.yt.jr.projects.creatures.actions.Action;
 import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.creatures.CreaturesTypes;
 import org.yt.jr.projects.utils.Config;
 
-public class CloneAction {
+public class CloneAction extends Action {
     final private Creature parent;
     final private Location location;
     final private CreaturesTypes childType;
@@ -20,13 +21,14 @@ public class CloneAction {
         this.lifeCycle = LifeCycle.LIFECYCLES.get(childType);
     }
 
-    public void cloneChild() {
+    @Override
+    public boolean doAction() {
         final Creature child;
 
         synchronized (parent) {
             synchronized (location) {
                 if (!parent.isReadyToReproduce(true)) {
-                    return;
+                    return false;
                 }
                 parent.resetTurnsToReproduce();
                 child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.CREATURE_CHILD_HEALTH);
@@ -38,5 +40,6 @@ public class CloneAction {
                 }
             }
         }
+        return true;
     }
 }
