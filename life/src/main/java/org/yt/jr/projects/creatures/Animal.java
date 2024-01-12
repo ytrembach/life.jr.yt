@@ -24,9 +24,13 @@ public abstract class Animal extends Creature {
                 Optional<Animal> found = findPairToReproduce();
                 if (found.isPresent()) {
                     Animal pair = found.get();
-                    new BornAction(this, pair).bornChild();
-                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
-                            String.format("%s successfully paired with %s", this, pair));
+                    if (new BornAction(this, pair).doAction()) {
+                        Logger.Log(LogSources.CREATURE, LogLevels.INFO,
+                                String.format("%s successfully paired with %s", this, pair));
+                    } else {
+                        Logger.Log(LogSources.CREATURE, LogLevels.ERROR,
+                                String.format("%s failed to pair with %s", this, pair));
+                    }
                 } else {
                     Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("pair not found for %s", this));
                 }

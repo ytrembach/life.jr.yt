@@ -18,8 +18,11 @@ public class Plant extends Creature {
         if (isReadyToReproduce(false)) {
             double probability = Config.CONFIG.getReproduceProbability(type);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
-                new CloneAction(this).cloneChild();
-                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("%s cloned", this));
+                if (new CloneAction(this).doAction()) {
+                    Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully cloned", this));
+                } else {
+                    Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("%s failed to clone in cloneAction", this));
+                }
             }
         }
     }

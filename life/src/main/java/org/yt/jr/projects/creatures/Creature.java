@@ -80,8 +80,14 @@ public abstract class Creature implements Runnable {
         final double maxAge = Config.CONFIG.getMaxAge(type);
         final double deathProbability = -1 / Math.exp(1) * Math.log((maxAge - age) / maxAge);
         if (age >= maxAge || ThreadLocalRandom.current().nextDouble() < deathProbability) {
-            Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("%s died", this));
-            new DieAction(this).die();
+            String creatureString = this.toString();
+            if (new DieAction(this).doAction()) {
+                Logger.Log(LogSources.CREATURE, LogLevels.INFO,
+                        String.format("%s successfully died", creatureString));
+            } else {
+                Logger.Log(LogSources.CREATURE, LogLevels.ERROR,
+                        String.format("%s failed to die in dieAction", creatureString));
+            }
         }
     }
 
