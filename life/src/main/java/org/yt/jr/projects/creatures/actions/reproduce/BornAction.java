@@ -10,11 +10,11 @@ import org.yt.jr.projects.utils.Config;
 import static org.yt.jr.projects.creatures.Creature.*;
 
 public class BornAction {
-    private Creature firstParent;
-    private Creature secondParent;
-    private Location location;
-    private CreaturesTypes childType;
-    private LifeCycle lifeCycle;
+    final private Creature firstParent;
+    final private Creature secondParent;
+    final private Location location;
+    final private CreaturesTypes childType;
+    final private LifeCycle lifeCycle;
 
     public BornAction(final Creature firstParent, final Creature secondParent) {
         this.firstParent = firstParent;
