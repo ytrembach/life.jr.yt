@@ -3,6 +3,7 @@ package org.yt.jr.projects;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleCreator;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleTypes;
+import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.maps.WorldMap;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
@@ -28,6 +29,11 @@ public class World {
             prompt();
             userInput = console.readLine();
             while (!"EXIT".equalsIgnoreCase(userInput)) {
+                if ("".equals(userInput)) {
+                    plantsLifeCycle.showStatus();
+                    herbivoresCycle.showStatus();
+                }
+
                 String[] items = userInput.split("\s+");
                 if (items.length == 2) {
                     try {
