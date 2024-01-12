@@ -26,7 +26,7 @@ public class LifeCycle implements AutoCloseable {
 
         int poolSize = Config.CONFIG.getPoolSize(type);
         executorService = Executors.newScheduledThreadPool(poolSize,
-                (r) -> new Thread(r, type.name().substring(0, 1) + "="));
+                (r) -> new Thread(r, type.name().charAt(0) + "="));
     }
 
     public LifeCycleTypes getType() {
