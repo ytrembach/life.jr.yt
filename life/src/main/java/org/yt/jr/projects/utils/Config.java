@@ -1,96 +1,95 @@
 package org.yt.jr.projects.utils;
 
-import org.yt.jr.projects.creatures.CreaturesTypes;
-import org.yt.jr.projects.creatures.lifecycles.LifeCycleTypes;
+import org.yt.jr.projects.creatures.CreatureType;
+import org.yt.jr.projects.creatures.lifecycles.LifeCycleType;
 import org.yt.jr.projects.utils.logs.LogLevels;
 
-import java.util.Map;
+import java.io.FileInputStream;
+import java.nio.file.Path;
+import java.util.Properties;
 
 public class Config {
+    final private static String PROPERTIES_FILENAME = "life.properties";
+    final private static String LOGFILE_NAME = "life.log";
 
-    final public static Config CONFIG = new Config();
+    final private Properties properties;
 
-    final public static int CREATURE_MAX_HEALTH = 100;
-    final public static int CREATURE_CHILD_HEALTH = 10;
-
-    public String getLogFilePath() {
-        return "/home/yt/IdeaProjects/tmp/life.jr.log";
+    public Config(final String propertiesFileName) {
+        try {
+            final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+            final String appConfigPath = rootPath + propertiesFileName;
+            properties = new Properties();
+            properties.load(new FileInputStream(appConfigPath));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public LogLevels getLogLevel() {
-        return LogLevels.DEBUG;
+    final public static Config CONFIG = new Config(PROPERTIES_FILENAME);
+
+    // System
+    public Path logFile() {
+        return Path.of(properties.getProperty("system.log.file.path"), LOGFILE_NAME);
     }
 
-    public int getPoolSize(LifeCycleTypes type) {
-        int valueDefault = 4;
-        final Map<LifeCycleTypes, Integer> poolSizes = Map.of(
-
-        );
-        return poolSizes.getOrDefault(type, valueDefault);
-    }
-
-    public int getMaxCreaturePerLocation(CreaturesTypes type) {
-        int valueDefault = 10;
-        final Map<CreaturesTypes, Integer> maxNumbers = Map.of(
-                CreaturesTypes.PLANTS, 200
-        );
-        return maxNumbers.getOrDefault(type, valueDefault);
-    }
-
-    public Double getInitCreaturePerLocationShare(CreaturesTypes type) {
-        double valueDefault = 0.5;
-        final Map<CreaturesTypes, Double> shares = Map.of(
-                CreaturesTypes.PLANTS, 0.1
-        );
-        return shares.getOrDefault(type, valueDefault);
-    }
-
-    public int getTurnsPerMove(LifeCycleTypes type) {
-        int valueDefault = 1;
-        final Map<LifeCycleTypes, Integer> durations = Map.of(
-                LifeCycleTypes.PLANTS, 5,
-                LifeCycleTypes.HERBIVORES, 3,
-                LifeCycleTypes.CARNIVORES, 1
-        );
-        return durations.getOrDefault(type, valueDefault);
-    }
-
-    public int getTurnsToReproduceDefault(CreaturesTypes type) {
-        int valueDefault = 1;
-        final Map<CreaturesTypes, Integer> probabilities = Map.of(
-                CreaturesTypes.HORSE, 5,
-                CreaturesTypes.DEER, 5
-        );
-        return probabilities.getOrDefault(type, valueDefault);
-    }
-
-    public Double getReproduceProbability(CreaturesTypes type) {
-        double valueDefault = 0.1;
-        final Map<CreaturesTypes, Double> probabilities = Map.of(
-                CreaturesTypes.PLANTS, 0.2,
-                CreaturesTypes.HORSE, 0.15,
-                CreaturesTypes.DEER, 0.10
-        );
-        return probabilities.getOrDefault(type, valueDefault);
-    }
-
-    public int getMaxAge(CreaturesTypes type) {
-        int valueDefault = 1;
-        final Map<CreaturesTypes, Integer> probabilities = Map.of(
-                CreaturesTypes.PLANTS, 200,
-                CreaturesTypes.HORSE, 80,
-                CreaturesTypes.DEER, 100
-        );
-        return probabilities.getOrDefault(type, valueDefault);
+    public LogLevels logLevel() {
+        return LogLevels.valueOf(properties.getProperty("system.log.level").toUpperCase());
     }
 
     public int getMapWidth() {
-        return 3;
+        return Integer.parseInt(properties.getProperty("system.map.width"));
     }
 
     public int getMapHeight() {
-        return 3;
+        return Integer.parseInt(properties.getProperty("system.map.height"));
     }
+
+    // Life Cycle
+    public int poolSize(LifeCycleType type) {
+        return Integer.parseInt(get(type, "pool.size"));
+    }
+
+    public int turnsPerMove(LifeCycleType type) {
+        return Integer.parseInt(get(type, "turns_per_move"));
+    }
+
+    // Creatures
+    public int creatureDefaultHealth(String key) {
+        return Integer.parseInt(get(CreatureType.NONEXISTENT, "health." + key));
+    }
+
+    public int maxCreaturePerLocation(CreatureType type) {
+        return Integer.parseInt(get(type, "per_location.max"));
+    }
+
+    public Double initCreaturePerLocationShare(CreatureType type) {
+        return Double.parseDouble(get(type, "per_location.init"));
+    }
+
+    public int turnsToReproduce(CreatureType type) {
+        return Integer.parseInt(get(type, "turns_per_reproduce"));
+    }
+
+    public Double reproduceProbability(CreatureType type) {
+        return Double.parseDouble(get(type, "reproduce_probability"));
+    }
+
+    public int maxAge(CreatureType type) {
+        return Integer.parseInt(get(type, "max_age"));
+    }
+
+    private <T> String get(T inputType, String key) {
+        String group = inputType.getClass().getSimpleName().toLowerCase().replace("type", "");
+        String value = properties.getProperty(group + "." + inputType.toString().toLowerCase() + "." + key);
+        if (value == null) {
+            value = properties.getProperty(group + ".default." + key);
+            if (value == null) {
+                throw new RuntimeException(String.format("key %s.default.%s doesn't found in properties", group, key));
+            }
+        }
+        return value;
+    }
+
 }
 
 
