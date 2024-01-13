@@ -58,6 +58,7 @@ public class Logger {
         }
         try {
             writer.write(logMessage);
+            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
