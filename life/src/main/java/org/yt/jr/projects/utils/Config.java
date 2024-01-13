@@ -29,19 +29,23 @@ public class Config {
 
     // System
     public Path logFile() {
-        return Path.of(properties.getProperty("system.log.file.path"), LOGFILE_NAME);
+        return Path.of(properties.getProperty("system.log.path"), LOGFILE_NAME);
     }
 
     public LogLevels logLevel() {
         return LogLevels.valueOf(properties.getProperty("system.log.level").toUpperCase());
     }
 
-    public int getMapWidth() {
+    public int mapWidth() {
         return Integer.parseInt(properties.getProperty("system.map.width"));
     }
 
-    public int getMapHeight() {
+    public int mapHeight() {
         return Integer.parseInt(properties.getProperty("system.map.height"));
+    }
+
+    public int turnDurationInSeconds() {
+        return Integer.parseInt(properties.getProperty("system.turn.duration_in_seconds"));
     }
 
     // Life Cycle
@@ -76,6 +80,10 @@ public class Config {
 
     public int maxAge(CreatureType type) {
         return Integer.parseInt(get(type, "max_age"));
+    }
+
+    public int decreaseHealthPerMove(CreatureType type) {
+        return Integer.parseInt(get(type, ""));
     }
 
     private <T> String get(T inputType, String key) {
