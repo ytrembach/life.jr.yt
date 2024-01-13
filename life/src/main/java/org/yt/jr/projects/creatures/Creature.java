@@ -7,6 +7,7 @@ import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,7 +28,7 @@ public abstract class Creature implements Runnable {
         this.id = lastId.addAndGet(1);
         this.health = health;
         this.age = 0;
-        turnsToReproduce = ThreadLocalRandom.current().nextInt(1,Config.CONFIG.turnsToReproduce(type));
+        turnsToReproduce = ThreadLocalRandom.current().nextInt(1, Config.CONFIG.turnsToReproduce(type));
     }
 
     public CreatureType getType() {
@@ -64,18 +65,34 @@ public abstract class Creature implements Runnable {
 
     @Override
     public void run() {
-        age += Config.CONFIG.turnsPerMove(type.getLifeCycleType());
+        increaseAge();
+        decreaseHealth();
+
         tryToDie();
 
-        turnsToReproduce -= Config.CONFIG.turnsPerMove(type.getLifeCycleType());
-        turnsToReproduce = (turnsToReproduce < 0) ? 0 : turnsToReproduce;
+        decreaseTurnsToReproduce();
         tryToReproduce();
     }
 
+    // general
+    private void increaseAge() {
+        synchronized (this) {
+            age += Config.CONFIG.turnsPerMove(type.getLifeCycleType());
+        }
+    }
+
+    private void decreaseHealth() {
+        synchronized (this) {
+            health = Math.max(health - Config.CONFIG.decreaseHealthPerMove(type), 0);
+        }
+    }
+
+    // die
     public void tryToDie() {
         final double maxAge = Config.CONFIG.maxAge(type);
         final double deathProbability = -1 / Math.exp(1) * Math.log((maxAge - age) / maxAge);
-        if (age >= maxAge || ThreadLocalRandom.current().nextDouble() < deathProbability) {
+        final double random = ThreadLocalRandom.current().nextDouble();
+        if (health == 0 || age >= maxAge || random < deathProbability) {
             String creatureString = this.toString();
             if (new DieAction(this).doAction()) {
                 Logger.Log(LogSources.CREATURE, LogLevels.INFO,
@@ -87,9 +104,15 @@ public abstract class Creature implements Runnable {
         }
     }
 
+    // reproduce
     public abstract void tryToReproduce();
 
-    //
+    private void decreaseTurnsToReproduce() {
+        synchronized (this) {
+            turnsToReproduce = Math.max(turnsToReproduce - Config.CONFIG.turnsPerMove(type.getLifeCycleType()), 0);
+        }
+    }
+
     public boolean isReadyToReproduce(boolean writeLog) {
         if (!checkTurnsToReproduce(writeLog)) {
             Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
@@ -122,7 +145,7 @@ public abstract class Creature implements Runnable {
     }
 
 
-    //
+    // static comparison - to lock in order
     public static Creature more(Creature first, Creature second) {
         return first.getId() > second.getId() ? first : second;
     }
