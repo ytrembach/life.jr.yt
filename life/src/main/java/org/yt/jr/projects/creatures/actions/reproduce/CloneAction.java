@@ -6,12 +6,10 @@ import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.creatures.CreatureType;
-import org.yt.jr.projects.utils.Config;
+import org.yt.jr.projects.utils.logs.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class CloneAction implements Action {
     final private Creature parent;
@@ -27,21 +25,7 @@ public class CloneAction implements Action {
     }
 
     @Override
-    public boolean checkReady() {
-        if (parent.isReadyToReproduce(false)) {
-            double probability = Config.CONFIG.reproduceProbability(childType);
-            if (ThreadLocalRandom.current().nextDouble() < probability) {
-                return true;
-            } else {
-                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
-                        String.format("probability failed for %s", parent));
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public void doAction() {
+    public void doAction(final Creature notUsed) {
         final Creature child;
         boolean result = false;
 
@@ -49,7 +33,8 @@ public class CloneAction implements Action {
             synchronized (location) {
                 if (parent.isReadyToReproduce(true)) {
                     parent.resetTurnsToReproduce();
-                    child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.CONFIG.creatureDefaultHealth("child"));
+                    child = CreatureFactory.CREATURE_FACTORY.getCreature(childType)
+                            .apply(Config.CONFIG.creatureDefaultHealth("child"));
                     synchronized (child) {
                         location.addCreature(child);
                         synchronized (lifeCycle) {
