@@ -1,6 +1,9 @@
 package org.yt.jr.projects.creatures;
 
+import org.yt.jr.projects.creatures.actions.Action;
+import org.yt.jr.projects.creatures.actions.Check;
 import org.yt.jr.projects.creatures.actions.die.DieAction;
+import org.yt.jr.projects.creatures.actions.die.DieCheck;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
@@ -9,6 +12,8 @@ import org.yt.jr.projects.utils.logs.Logger;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
 
 public abstract class Creature implements Runnable {
     //
@@ -17,17 +22,21 @@ public abstract class Creature implements Runnable {
     //
     final protected int id;
     protected int health;
-    protected int age;
+    protected int age = 0;
     protected Location location;
     //
-    protected int turnsToReproduce;
+    final private Function<Creature, Check> dieCheck = DieCheck::new;
+    final private Function<Creature, Action> dieAction = DieAction::new;
+    //
+    private int turnsToReproduce;
+    protected Function<Creature, Check> reproduceCheck;
+    protected Function<Creature, Action> reproduceAction;
 
     public Creature(CreatureType type, int health) {
-        this.type = type;
         this.id = lastId.addAndGet(1);
+        this.type = type;
         this.health = health;
-        this.age = 0;
-        turnsToReproduce = ThreadLocalRandom.current().nextInt(1, Config.CONFIG.turnsToReproduce(type));
+        turnsToReproduce = ThreadLocalRandom.current().nextInt(0, Config.CONFIG.turnsToReproduce(type));
     }
 
     public CreatureType getType() {
@@ -90,22 +99,23 @@ public abstract class Creature implements Runnable {
 
     private void decreaseHealth() {
         synchronized (this) {
-            health = Math.max(health - Config.CONFIG.decreaseHealthPerMove(type), 0);
+            health = Math.max(health -
+                    Config.CONFIG.decreaseHealthPerMove(type) *
+                            Config.CONFIG.turnsPerMove(type.getLifeCycleType()), 0);
         }
     }
 
     // die
-    public void tryToDie() {
-        final DieAction dieAction = new DieAction(this);
-        if (dieAction.checkReady()) {
-            dieAction.doAction();
+    private void tryToDie() {
+        if (dieCheck.apply(this).checkPartyToAct().isPresent()) {
+            dieAction.apply(this).doAction(this);
             age = 0;
             health = 0;
         }
     }
 
     // reproduce
-    public abstract void tryToReproduce();
+    protected abstract void tryToReproduce();
 
     private void decreaseTurnsToReproduce() {
         synchronized (this) {
@@ -143,7 +153,6 @@ public abstract class Creature implements Runnable {
             return true;
         }
     }
-
 
     // static comparison - to lock in order
     public static Creature more(Creature first, Creature second) {
