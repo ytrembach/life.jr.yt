@@ -39,8 +39,8 @@ public class World {
                         int row = Integer.parseInt(items[0]);
                         int col = Integer.parseInt(items[1]);
 
-                        if (row >= 0 && row < Config.CONFIG.mapHeight()
-                                && col >= 0 && col < Config.CONFIG.mapWidth()) {
+                        if (row >= 0 && row < Config.CONFIG.mapRows()
+                                && col >= 0 && col < Config.CONFIG.mapCols()) {
                             System.out.println(worldMap.getLocation(row, col));
                         } else {
                             System.out.printf("Location with row %d and col %s is outside the map", row, col);
