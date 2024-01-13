@@ -36,12 +36,12 @@ public class Config {
         return LogLevels.valueOf(properties.getProperty("system.log.level").toUpperCase());
     }
 
-    public int mapWidth() {
-        return Integer.parseInt(properties.getProperty("system.map.width"));
+    public int mapCols() {
+        return Integer.parseInt(properties.getProperty("system.map.cols"));
     }
 
-    public int mapHeight() {
-        return Integer.parseInt(properties.getProperty("system.map.height"));
+    public int mapRows() {
+        return Integer.parseInt(properties.getProperty("system.map.rows"));
     }
 
     public int turnDurationInSeconds() {
@@ -83,7 +83,7 @@ public class Config {
     }
 
     public int decreaseHealthPerMove(CreatureType type) {
-        return Integer.parseInt(get(type, ""));
+        return Integer.parseInt(get(type, "decrease_health_per_move"));
     }
 
     private <T> String get(T inputType, String key) {
