@@ -25,8 +25,8 @@ public class WorldMap implements Iterable<Location> {
     }
 
     private WorldMap() {
-        this.width = Config.CONFIG.getMapWidth();
-        this.height = Config.CONFIG.getMapHeight();
+        this.width = Config.CONFIG.mapWidth();
+        this.height = Config.CONFIG.mapHeight();
         this.grid = new Location[height][width];
     }
 
