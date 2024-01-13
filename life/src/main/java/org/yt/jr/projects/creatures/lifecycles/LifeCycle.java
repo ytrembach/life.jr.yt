@@ -2,7 +2,7 @@ package org.yt.jr.projects.creatures.lifecycles;
 
 import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.utils.Config;
-import org.yt.jr.projects.creatures.CreaturesTypes;
+import org.yt.jr.projects.creatures.CreatureType;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
@@ -14,22 +14,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class LifeCycle implements AutoCloseable {
     final private AtomicInteger count = new AtomicInteger(0);
-    final public static Map<CreaturesTypes, LifeCycle> LIFECYCLES = new HashMap<>();
-    final private LifeCycleTypes type;
+    final public static Map<CreatureType, LifeCycle> LIFECYCLES = new HashMap<>();
+    final private LifeCycleType type;
     final private Map<Creature, ScheduledFuture<?>> liveCreatures;
 
     final private ScheduledExecutorService executorService;
 
-    public LifeCycle(LifeCycleTypes type) {
+    public LifeCycle(LifeCycleType type) {
         this.type = type;
         liveCreatures = new HashMap<>();
 
-        int poolSize = Config.CONFIG.getPoolSize(type);
+        int poolSize = Config.CONFIG.poolSize(type);
         executorService = Executors.newScheduledThreadPool(poolSize,
                 (r) -> new Thread(r, type.name().charAt(0) + "="));
     }
 
-    public LifeCycleTypes getType() {
+    public LifeCycleType getType() {
         return type;
     }
 
@@ -41,7 +41,7 @@ public class LifeCycle implements AutoCloseable {
     }
 
     public void addCreature(Creature creature) {
-        long turnsPerMove = Config.CONFIG.getTurnsPerMove(type);
+        long turnsPerMove = Config.CONFIG.turnsPerMove(type);
         synchronized (liveCreatures) {
             ScheduledFuture<?> future = executorService.scheduleAtFixedRate(creature,
                     turnsPerMove,
@@ -67,10 +67,13 @@ public class LifeCycle implements AutoCloseable {
 
     public void showStatus() {
         System.out.printf("%s: count: %d ", this, count.get());
-        Map<CreaturesTypes, Integer> countByTypes = new HashMap<>();
-        for (Creature creature : liveCreatures.keySet()) {
-            CreaturesTypes type = creature.getType();
-            countByTypes.put(type, countByTypes.getOrDefault(type, 0) + 1);
+
+        Map<CreatureType, Integer> countByTypes = new HashMap<>();
+        synchronized (liveCreatures) {
+            for (Creature creature : liveCreatures.keySet()) {
+                CreatureType type = creature.getType();
+                countByTypes.put(type, countByTypes.getOrDefault(type, 0) + 1);
+            }
         }
         System.out.println(countByTypes);
     }
