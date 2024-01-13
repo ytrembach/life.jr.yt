@@ -15,7 +15,6 @@ import static org.yt.jr.projects.creatures.Creature.*;
 
 public class BornAction implements Action {
     final private Creature firstParent;
-    private Creature secondParent;
     final private CreatureType childType;
     final private Location location;
     final private LifeCycle lifeCycle;
@@ -29,17 +28,17 @@ public class BornAction implements Action {
 
     @Override
     public void doAction(final Creature party) {
-        this.secondParent = party;
+        final Creature secondParent = party;
         final Creature child;
         boolean result = false;
 
         synchronized (less(firstParent, secondParent)) {
             synchronized (more(firstParent, secondParent)) {
                 synchronized (location) {
-                    if (secondParent != null &&
-                            firstParent.getLocation().equals(secondParent.getLocation()) &&
-                            firstParent.isReadyToReproduce(true) &&
-                            secondParent.isReadyToReproduce(true)) {
+                    if (firstParent.getLocation().equals(secondParent.getLocation())
+                            && firstParent.isReadyToReproduce(true)
+                            && secondParent.isReadyToReproduce(true)) {
+
                         firstParent.resetTurnsToReproduce();
                         secondParent.resetTurnsToReproduce();
                         child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.CONFIG.creatureDefaultHealth("child"));
@@ -50,6 +49,7 @@ public class BornAction implements Action {
                             }
                         }
                         result = true;
+
                     }
                 }
             }
