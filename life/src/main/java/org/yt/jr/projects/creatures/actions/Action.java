@@ -1,6 +1,6 @@
 package org.yt.jr.projects.creatures.actions;
 
-public abstract interface Action {
+public interface Action {
     boolean checkReady();
     void doAction();
 }
