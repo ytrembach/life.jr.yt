@@ -38,6 +38,14 @@ public abstract class Creature implements Runnable {
         return id;
     }
 
+    public int getHealth() {
+        return health;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -88,18 +96,11 @@ public abstract class Creature implements Runnable {
 
     // die
     public void tryToDie() {
-        final double maxAge = Config.CONFIG.maxAge(type);
-        final double deathProbability = -1 / Math.exp(1) * Math.log((maxAge - age) / maxAge);
-        final double random = ThreadLocalRandom.current().nextDouble();
-        if (health == 0 || age >= maxAge || random < deathProbability) {
-            String creatureString = this.toString();
-            if (new DieAction(this).doAction()) {
-                Logger.Log(LogSources.CREATURE, LogLevels.INFO,
-                        String.format("%s successfully died", creatureString));
-            } else {
-                Logger.Log(LogSources.CREATURE, LogLevels.ERROR,
-                        String.format("%s failed to die in dieAction", creatureString));
-            }
+        final DieAction dieAction = new DieAction(this);
+        if (dieAction.checkReady()) {
+            dieAction.doAction();
+            age = 0;
+            health = 0;
         }
     }
 
