@@ -16,8 +16,8 @@ public class Config {
 
     public Config(final String propertiesFileName) {
         try {
-            final String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-            final String appConfigPath = rootPath + propertiesFileName;
+            final String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
+            final String appConfigPath = projectPath + propertiesFileName;
             properties = new Properties();
             properties.load(new FileInputStream(appConfigPath));
         } catch (Exception e) {
