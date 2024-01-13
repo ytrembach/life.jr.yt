@@ -2,7 +2,7 @@ package org.yt.jr.projects.maps;
 
 import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.utils.Config;
-import org.yt.jr.projects.creatures.CreaturesTypes;
+import org.yt.jr.projects.creatures.CreatureType;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
@@ -21,7 +21,7 @@ public class Location {
     final private Map<LocationNeighbors, Location> neighbors;
     final private ArrayList<Creature> habitants;
 
-    final private Map<CreaturesTypes, Integer> creaturesCount;
+    final private Map<CreatureType, Integer> creaturesCount;
 
     private Location() {
         this.id = 0;
@@ -49,7 +49,7 @@ public class Location {
         return habitants;
     }
 
-    public Integer getCreaturesCount(CreaturesTypes type) {
+    public Integer getCreaturesCount(CreatureType type) {
         return creaturesCount.get(type);
     }
 
@@ -68,7 +68,7 @@ public class Location {
     }
 
     public void addCreature(Creature creature) {
-        CreaturesTypes type = creature.getType();
+        CreatureType type = creature.getType();
         habitants.add(creature);
         creature.setLocation(this);
         creaturesCount.put(type, creaturesCount.getOrDefault(type, 0) + 1);
@@ -76,18 +76,18 @@ public class Location {
     }
 
     public void removeCreature(Creature creature) {
-        CreaturesTypes type = creature.getType();
+        CreatureType type = creature.getType();
         habitants.remove(creature);
         creaturesCount.put(type, creaturesCount.get(type) - 1);
         Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s removed from %s", creature, this));
         creature.setLocation(NOWHERE);
     }
 
-    public boolean checkSpaceAvailable(CreaturesTypes type, boolean writeLogOnError) {
+    public boolean checkSpaceAvailable(CreatureType type, boolean writeLogOnError) {
         if (this == NOWHERE) {
             return false;
         }
-        if (creaturesCount.get(type) >= Config.CONFIG.getMaxCreaturePerLocation(type)) {
+        if (creaturesCount.get(type) >= Config.CONFIG.maxCreaturePerLocation(type)) {
             if (writeLogOnError) {
                 Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
                         String.format("No slots for %s on %s", type, this));
