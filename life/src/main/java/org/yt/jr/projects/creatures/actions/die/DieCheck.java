@@ -2,7 +2,7 @@ package org.yt.jr.projects.creatures.actions.die;
 
 import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.creatures.actions.Check;
-import org.yt.jr.projects.utils.logs.Config;
+import org.yt.jr.projects.utils.Config;
 
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;

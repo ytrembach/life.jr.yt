@@ -3,7 +3,7 @@ package org.yt.jr.projects.creatures.actions.reproduce;
 import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.creatures.CreatureType;
 import org.yt.jr.projects.creatures.actions.Check;
-import org.yt.jr.projects.utils.logs.Config;
+import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
