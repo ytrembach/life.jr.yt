@@ -12,14 +12,14 @@ import java.util.function.Function;
 public class CreatureFactory {
     final public static CreatureFactory CREATURE_FACTORY = new CreatureFactory();
 
-    final private Map<CreatureType, Function<Integer,Creature>> generators = Map.of(
+    final private Map<CreatureType, Function<Integer, Creature>> generators = Map.of(
             CreatureType.PLANT, Plant::new,
 
             CreatureType.HORSE, Horse::new,
             CreatureType.DEER, Deer::new
     );
 
-    public Function<Integer,Creature> getCreature(CreatureType type) {
+    public Function<Integer, Creature> getCreature(CreatureType type) {
         return generators.get(type);
     }
 }
