@@ -28,19 +28,19 @@ public class BornAction implements Action {
 
     @Override
     public void doAction(final Creature party) {
-        final Creature secondParent = party;
+        // final Creature secondParent = party;
         final Creature child;
         boolean result = false;
 
-        synchronized (less(firstParent, secondParent)) {
-            synchronized (more(firstParent, secondParent)) {
+        synchronized (less(firstParent, party)) {
+            synchronized (more(firstParent, party)) {
                 synchronized (location) {
-                    if (firstParent.getLocation().equals(secondParent.getLocation())
+                    if (firstParent.getLocation().equals(party.getLocation())
                             && firstParent.isReadyToReproduce(true)
-                            && secondParent.isReadyToReproduce(true)) {
+                            && party.isReadyToReproduce(true)) {
 
                         firstParent.resetTurnsToReproduce();
-                        secondParent.resetTurnsToReproduce();
+                        party.resetTurnsToReproduce();
                         child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.CONFIG.creatureDefaultHealth("child"));
                         synchronized (child) {
                             location.addCreature(child);
@@ -55,7 +55,7 @@ public class BornAction implements Action {
             }
         }
         if (result) {
-            Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully paired with %s", firstParent, secondParent));
+            Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully paired with %s", firstParent, party));
         } else {
             Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("%s failed to pair in bordAction", firstParent));
         }
