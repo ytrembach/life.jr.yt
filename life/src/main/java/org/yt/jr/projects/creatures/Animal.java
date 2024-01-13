@@ -16,8 +16,6 @@ public abstract class Animal extends Creature {
     @Override
     protected void tryToReproduce() {
         Optional<Creature> partyFound =reproduceCheck.apply(this).checkPartyToAct();
-        if (partyFound.isPresent()) {
-            reproduceAction.apply(this).doAction(partyFound.get());
-        }
+        partyFound.ifPresent(creature -> reproduceAction.apply(this).doAction(creature));
     }
 }
