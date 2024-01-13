@@ -43,9 +43,11 @@ public class LifeCycle implements AutoCloseable {
     public void addCreature(Creature creature) {
         long turnsPerMove = Config.CONFIG.turnsPerMove(type);
         synchronized (liveCreatures) {
+            final long period = ThreadLocalRandom.current().nextInt(900, 1100) // smoothening
+                    * turnsPerMove
+                    * Config.CONFIG.turnDurationInSeconds();
             ScheduledFuture<?> future = executorService.scheduleAtFixedRate(creature,
-                    turnsPerMove,
-                    ThreadLocalRandom.current().nextInt(900,1100) * turnsPerMove,
+                    period, period,
                     TimeUnit.MILLISECONDS);
             liveCreatures.put(creature, future);
             count.addAndGet(1);
@@ -57,8 +59,8 @@ public class LifeCycle implements AutoCloseable {
         ScheduledFuture<?> future = liveCreatures.get(creature);
         synchronized (liveCreatures) {
             if (!future.cancel(true) || !future.isDone()) {
-                Logger.Log(LogSources.LIFECYCLE,LogLevels.DEBUG,
-                        String.format("task %s wasn't successfully cancelled from %s",future,this));
+                Logger.Log(LogSources.LIFECYCLE, LogLevels.DEBUG,
+                        String.format("task %s wasn't successfully cancelled from %s", future, this));
             }
             liveCreatures.remove(creature);
             count.addAndGet(-1);
