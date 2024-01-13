@@ -49,10 +49,6 @@ public class Location {
         return habitants;
     }
 
-    public Integer getCreaturesCount(CreatureType type) {
-        return creaturesCount.get(type);
-    }
-
     @Override
     public String toString() {
         return "Location{" +
