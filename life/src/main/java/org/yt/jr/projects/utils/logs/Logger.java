@@ -3,6 +3,7 @@ package org.yt.jr.projects.utils.logs;
 import org.yt.jr.projects.utils.Config;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -10,10 +11,10 @@ public class Logger {
     private static boolean initialized = false;
     private static FileWriter writer;
 
-    public static void initLogger(String path) {
+    public static void initLogger(Path path) {
         if (!initialized) {
             try {
-                writer = new FileWriter(path, false);
+                writer = new FileWriter(path.toFile(), false);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -35,7 +36,7 @@ public class Logger {
     }
 
     public static void Log(LogSources source, LogLevels level, String message) {
-        if (level.ordinal() < Config.CONFIG.getLogLevel().ordinal()) {
+        if (level.ordinal() < Config.CONFIG.logLevel().ordinal()) {
             return;
         }
         LocalDateTime now = LocalDateTime.now();
@@ -47,13 +48,16 @@ public class Logger {
                 level.getMessage(),
                 message);
 
+        if (level == LogLevels.FATAL) {
+            System.out.println(message);
+        }
+
         if (!initialized) {
             throw new RuntimeException(String.format("Logger doesn't initialized yet, it cannot log this message: %s",
                     logMessage));
         }
         try {
             writer.write(logMessage);
-            writer.flush();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
