@@ -1,6 +1,8 @@
 package org.yt.jr.projects.creatures.actions;
 
+import org.yt.jr.projects.creatures.Creature;
+
+@FunctionalInterface
 public interface Action {
-    boolean checkReady();
-    void doAction();
+    void doAction(final Creature party);
 }
