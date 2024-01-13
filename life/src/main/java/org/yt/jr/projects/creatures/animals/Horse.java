@@ -1,12 +1,12 @@
 package org.yt.jr.projects.creatures.animals;
 
 import org.yt.jr.projects.creatures.Animal;
-import org.yt.jr.projects.creatures.CreaturesTypes;
+import org.yt.jr.projects.creatures.CreatureType;
 
 public class Horse extends Animal {
 
     public Horse(int health) {
-        super(CreaturesTypes.HORSE, health);
+        super(CreatureType.HORSE, health);
     }
 
 }
