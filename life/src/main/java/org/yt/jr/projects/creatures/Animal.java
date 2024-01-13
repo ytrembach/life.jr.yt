@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class Animal extends Creature {
-    public Animal(CreaturesTypes type, int health) {
+    public Animal(CreatureType type, int health) {
         super(type, health);
     }
 
@@ -19,7 +19,7 @@ public abstract class Animal extends Creature {
     public void tryToReproduce() {
         if (isReadyToReproduce(false)) {
             Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("trying to reproduce %s in %s", this, location));
-            double probability = Config.CONFIG.getReproduceProbability(type);
+            double probability = Config.CONFIG.reproduceProbability(type);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
                 Optional<Animal> found = findPairToReproduce();
                 if (found.isPresent()) {
