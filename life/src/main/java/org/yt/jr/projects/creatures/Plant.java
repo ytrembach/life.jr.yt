@@ -10,13 +10,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Plant extends Creature {
     public Plant(int health) {
-        super(CreaturesTypes.PLANTS, health);
+        super(CreatureType.PLANT, health);
     }
 
     @Override
     public void tryToReproduce() {
         if (isReadyToReproduce(false)) {
-            double probability = Config.CONFIG.getReproduceProbability(type);
+            double probability = Config.CONFIG.reproduceProbability(type);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
                 if (new CloneAction(this).doAction()) {
                     Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully cloned", this));
