@@ -1,6 +1,7 @@
 package org.yt.jr.projects.utils.logs;
 
 import org.yt.jr.projects.utils.Config;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
