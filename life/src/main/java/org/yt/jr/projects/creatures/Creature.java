@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class Creature implements Runnable {
     //
     final private static AtomicInteger lastId = new AtomicInteger(0);
-    final protected CreaturesTypes type;
+    final protected CreatureType type;
     //
     final protected int id;
     protected int health;
@@ -22,15 +22,15 @@ public abstract class Creature implements Runnable {
     //
     protected int turnsToReproduce;
 
-    public Creature(CreaturesTypes type, int health) {
+    public Creature(CreatureType type, int health) {
         this.type = type;
         this.id = lastId.addAndGet(1);
         this.health = health;
         this.age = 0;
-        resetTurnsToReproduce();
+        turnsToReproduce = ThreadLocalRandom.current().nextInt(1,Config.CONFIG.turnsToReproduce(type));
     }
 
-    public CreaturesTypes getType() {
+    public CreatureType getType() {
         return type;
     }
 
@@ -51,7 +51,7 @@ public abstract class Creature implements Runnable {
     }
 
     public void resetTurnsToReproduce() {
-        this.turnsToReproduce = Config.CONFIG.getTurnsToReproduceDefault(type);
+        this.turnsToReproduce = Config.CONFIG.turnsToReproduce(type);
     }
 
     @Override
@@ -68,16 +68,16 @@ public abstract class Creature implements Runnable {
 
     @Override
     public void run() {
-        age += Config.CONFIG.getTurnsPerMove(type.getLifeCycleType());
+        age += Config.CONFIG.turnsPerMove(type.getLifeCycleType());
         tryToDie();
 
-        turnsToReproduce -= Config.CONFIG.getTurnsPerMove(type.getLifeCycleType());
+        turnsToReproduce -= Config.CONFIG.turnsPerMove(type.getLifeCycleType());
         turnsToReproduce = (turnsToReproduce < 0) ? 0 : turnsToReproduce;
         tryToReproduce();
     }
 
     public void tryToDie() {
-        final double maxAge = Config.CONFIG.getMaxAge(type);
+        final double maxAge = Config.CONFIG.maxAge(type);
         final double deathProbability = -1 / Math.exp(1) * Math.log((maxAge - age) / maxAge);
         if (age >= maxAge || ThreadLocalRandom.current().nextDouble() < deathProbability) {
             String creatureString = this.toString();
@@ -110,7 +110,7 @@ public abstract class Creature implements Runnable {
     }
 
     private boolean checkTurnsToReproduce(boolean writeLogOnError) {
-        if (type.equals(CreaturesTypes.NONEXISTENT)) {
+        if (type.equals(CreatureType.NONEXISTENT)) {
             return false;
         }
         if (turnsToReproduce > 0) {
