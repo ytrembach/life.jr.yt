@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Location {
     public static Location NOWHERE = new Location();
-    final private static AtomicInteger lastId = new AtomicInteger(1);
+    final private static AtomicInteger lastId = new AtomicInteger(0);
     final private int id;
     final private int row;
     final private int col;
