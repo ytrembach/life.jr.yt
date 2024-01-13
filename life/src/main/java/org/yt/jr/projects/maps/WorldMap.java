@@ -8,8 +8,8 @@ import java.util.Iterator;
 import static org.yt.jr.projects.maps.LocationNeighbors.*;
 
 public class WorldMap implements Iterable<Location> {
-    final private int width;
-    final private int height;
+    final private int cols;
+    final private int rows;
     final private Location[][] grid;
 
     private static WorldMap WorldMAP;
@@ -19,20 +19,20 @@ public class WorldMap implements Iterable<Location> {
             WorldMAP = new WorldMap();
             WorldMAP.mapInit();
             Logger.Log(LogSources.SYSTEM, LogLevels.INFO, String.format("world map %dx%d created",
-                    WorldMAP.width, WorldMAP.height));
+                    WorldMAP.rows, WorldMAP.cols));
         }
         return WorldMAP;
     }
 
     private WorldMap() {
-        this.width = Config.CONFIG.mapWidth();
-        this.height = Config.CONFIG.mapHeight();
-        this.grid = new Location[height][width];
+        this.cols = Config.CONFIG.mapCols();
+        this.rows = Config.CONFIG.mapRows();
+        this.grid = new Location[rows][cols];
     }
 
     private void mapInit() {
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
                 Location newLocation = new Location(row, col);
                 grid[row][col] = newLocation;
                 setNeighbors(row, col);
@@ -49,7 +49,7 @@ public class WorldMap implements Iterable<Location> {
             up.setNeighbor(DOWN,cell);
         }
 
-        Location down = row < height - 1 ? grid[row + 1][col] : null;
+        Location down = row < rows - 1 ? grid[row + 1][col] : null;
         cell.setNeighbor(DOWN,down);
         if (down != null) {
             down.setNeighbor(UP,cell);
@@ -61,23 +61,23 @@ public class WorldMap implements Iterable<Location> {
             left.setNeighbor(RIGHT,cell);
         }
 
-        Location right = col < width - 1 ? grid[row][col + 1] : null;
+        Location right = col < cols - 1 ? grid[row][col + 1] : null;
         cell.setNeighbor(RIGHT,right);
         if (right != null) {
             right.setNeighbor(LEFT,cell);
         }
     }
 
-    int getWidth() {
-        return width;
+    int getCols() {
+        return cols;
     }
 
-    int getHeight() {
-        return height;
+    int getRows() {
+        return rows;
     }
 
     public Location getLocation(int row, int col) {
-        return grid[col][row];
+        return grid[row][col];
     }
 
     @Override

@@ -17,18 +17,18 @@ public class WorldMapIterator implements Iterator<Location> {
 
     @Override
     public boolean hasNext() {
-        return currRow != map.getWidth();
+        return currRow < map.getRows() - 1
+                || currRow == map.getRows() - 1 && currCol < map.getCols();
     }
 
     @Override
     public Location next() {
         if (hasNext()) {
             Location next = map.getLocation(currRow, currCol);
-            if (currCol == map.getHeight() - 1) {
+            currCol++;
+            if (currCol == map.getCols()) {
                 currRow++;
                 currCol = 0;
-            } else {
-                currCol++;
             }
             return next;
         } else {
