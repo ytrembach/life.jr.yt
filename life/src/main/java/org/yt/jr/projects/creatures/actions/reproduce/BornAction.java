@@ -28,7 +28,6 @@ public class BornAction implements Action {
 
     @Override
     public void doAction(final Creature party) {
-        // final Creature secondParent = party;
         final Creature child;
         boolean result = false;
 
