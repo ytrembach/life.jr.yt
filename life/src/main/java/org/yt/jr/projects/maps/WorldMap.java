@@ -27,7 +27,7 @@ public class WorldMap implements Iterable<Location> {
     private WorldMap() {
         this.width = Config.CONFIG.getMapWidth();
         this.height = Config.CONFIG.getMapHeight();
-        this.grid = new Location[width][height];
+        this.grid = new Location[height][width];
     }
 
     private void mapInit() {
@@ -77,7 +77,7 @@ public class WorldMap implements Iterable<Location> {
     }
 
     public Location getLocation(int row, int col) {
-        return grid[row][col];
+        return grid[col][row];
     }
 
     @Override
