@@ -46,10 +46,6 @@ public abstract class Creature implements Runnable {
         this.location = location;
     }
 
-    public long getTurnsToReproduce() {
-        return turnsToReproduce;
-    }
-
     public void resetTurnsToReproduce() {
         this.turnsToReproduce = Config.CONFIG.turnsToReproduce(type);
     }
