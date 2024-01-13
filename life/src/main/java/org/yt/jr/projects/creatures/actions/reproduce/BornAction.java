@@ -40,10 +40,10 @@ public class BornAction implements Action {
                     secondParent = found.get();
                     return true;
                 } else {
-                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("pair not found for %s", this));
+                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("pair not found for %s", firstParent));
                 }
             } else {
-                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("probability failed for %s", this));
+                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("probability failed for %s", firstParent));
             }
         }
         return false;

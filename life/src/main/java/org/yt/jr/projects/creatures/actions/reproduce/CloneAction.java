@@ -32,6 +32,9 @@ public class CloneAction implements Action {
             double probability = Config.CONFIG.reproduceProbability(childType);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
                 return true;
+            } else {
+                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
+                        String.format("probability failed for %s", parent));
             }
         }
         return false;
