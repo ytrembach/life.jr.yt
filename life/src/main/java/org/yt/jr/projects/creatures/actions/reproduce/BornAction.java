@@ -6,21 +6,18 @@ import org.yt.jr.projects.creatures.lifecycles.CreatureFactory;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.creatures.CreatureType;
-import org.yt.jr.projects.utils.Config;
+import org.yt.jr.projects.utils.logs.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
-
-import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 
 import static org.yt.jr.projects.creatures.Creature.*;
 
 public class BornAction implements Action {
     final private Creature firstParent;
     private Creature secondParent;
-    final private Location location;
     final private CreatureType childType;
+    final private Location location;
     final private LifeCycle lifeCycle;
 
     public BornAction(final Creature parent) {
@@ -31,25 +28,8 @@ public class BornAction implements Action {
     }
 
     @Override
-    public boolean checkReady() {
-        if (firstParent.isReadyToReproduce(false)) {
-            double probability = Config.CONFIG.reproduceProbability(childType);
-            if (ThreadLocalRandom.current().nextDouble() < probability) {
-                Optional<Creature> found = findPairToReproduce();
-                if (found.isPresent()) {
-                    secondParent = found.get();
-                    return true;
-                } else {
-                    Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("pair not found for %s", firstParent));
-                }
-            } else {
-                Logger.Log(LogSources.CREATURE, LogLevels.DEBUG, String.format("probability failed for %s", firstParent));
-            }
-        }
-        return false;
-    }
-    @Override
-    public void doAction() {
+    public void doAction(final Creature party) {
+        this.secondParent = party;
         final Creature child;
         boolean result = false;
 
@@ -79,13 +59,5 @@ public class BornAction implements Action {
         } else {
             Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("%s failed to pair in bordAction", firstParent));
         }
-    }
-
-    private Optional<Creature> findPairToReproduce() {
-        return location.getHabitants().stream()
-                .filter(creature -> creature.getType().equals(childType))
-                .filter(creature -> creature.isReadyToReproduce(false))
-                .filter(creature -> firstParent != creature)
-                .findAny();
     }
 }
