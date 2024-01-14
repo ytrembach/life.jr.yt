@@ -51,6 +51,10 @@ public abstract class Creature implements Runnable {
         return health;
     }
 
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     public int getAge() {
         return age;
     }
@@ -61,6 +65,10 @@ public abstract class Creature implements Runnable {
 
     public void setLocation(final Location location) {
         this.location = location;
+    }
+
+    public Function<Creature, Action> getDieAction() {
+        return dieAction;
     }
 
     public void resetTurnsToReproduce() {
@@ -77,6 +85,21 @@ public abstract class Creature implements Runnable {
                 ", location=" + location.getId() +
                 ", turnsToReproduce=" + turnsToReproduce +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Creature creature = (Creature) o;
+
+        return id == creature.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     @Override
