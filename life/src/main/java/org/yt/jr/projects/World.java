@@ -1,5 +1,6 @@
 package org.yt.jr.projects;
 
+import org.yt.jr.projects.creatures.actions.eat.FoodMatrix;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycle;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleCreator;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleType;
@@ -17,10 +18,12 @@ public class World {
         Logger.initLogger(Config.CONFIG.logFile());
 
         WorldMap worldMap = WorldMap.getMap();
+        FoodMatrix.FOOD_MATRIX.initFoodMatrix();
 
         try (
                 LifeCycle plantsLifeCycle = LifeCycleCreator.createLifeCycle(LifeCycleType.PLANTS);
-                LifeCycle herbivoresCycle = LifeCycleCreator.createLifeCycle(LifeCycleType.HERBIVORES)
+                LifeCycle herbivoresCycle = LifeCycleCreator.createLifeCycle(LifeCycleType.HERBIVORES);
+                LifeCycle carnivoresCycle = LifeCycleCreator.createLifeCycle(LifeCycleType.CARNIVORES)
         ) {
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             String userInput;
@@ -31,6 +34,7 @@ public class World {
                 if ("".equals(userInput)) {
                     plantsLifeCycle.showStatus();
                     herbivoresCycle.showStatus();
+                    carnivoresCycle.showStatus();
                 }
 
                 String[] items = userInput.split("\s+");
