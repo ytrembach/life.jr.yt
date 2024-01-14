@@ -4,7 +4,8 @@ public enum LogSources {
     SYSTEM("system"),
     CREATURE("creature"),
     LIFECYCLE("lifecycle"),
-    LOCATION("action");
+    LOCATION("location"),
+    ACTION("action");
 
     final private String message;
 
