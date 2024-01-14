@@ -54,9 +54,9 @@ public class BornAction implements Action {
             }
         }
         if (result) {
-            Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully paired with %s", firstParent, party));
+            Logger.Log(LogSources.ACTION, LogLevels.INFO, String.format("%s successfully paired with %s", firstParent, party));
         } else {
-            Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("%s failed to pair in bordAction", firstParent));
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR, String.format("%s failed to pair in bordAction", firstParent));
         }
     }
 }
