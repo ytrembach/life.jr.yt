@@ -82,8 +82,24 @@ public class Config {
         return Integer.parseInt(get(type, "max_age"));
     }
 
+    public int ownWeight(CreatureType type) {
+        return Integer.parseInt(get(type, "own_weight"));
+    }
+
+    public int needFoodWeight(CreatureType type) {
+        return Integer.parseInt(get(type, "need_food_weight"));
+    }
+
     public int decreaseHealthPerMove(CreatureType type) {
         return Integer.parseInt(get(type, "decrease_health_per_move"));
+    }
+
+    public Double getFoodMatrixValue(CreatureType eaterType, CreatureType foodType) {
+        final String prefix = "creature.food_matrix.";
+        String eaterTypeName = eaterType.name().toLowerCase();
+        String foodTypeName = foodType.name().toLowerCase();
+        String value = properties.getProperty(prefix + eaterTypeName + "." + foodTypeName);
+        return value != null ? Double.parseDouble(value) : 0;
     }
 
     private <T> String get(T inputType, String key) {
@@ -97,7 +113,6 @@ public class Config {
         }
         return value;
     }
-
 }
 
 
