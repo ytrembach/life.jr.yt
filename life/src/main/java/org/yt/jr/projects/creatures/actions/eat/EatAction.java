@@ -14,11 +14,9 @@ import static org.yt.jr.projects.creatures.Creature.more;
 public class EatAction implements Action {
 
     private final Creature eater;
-    private final Location location;
 
     public EatAction(final Creature eater) {
         this.eater = eater;
-        this.location = eater.getLocation();
     }
 
     @Override

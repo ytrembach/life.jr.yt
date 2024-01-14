@@ -18,8 +18,7 @@ public class EatCheck implements Check {
     @Override
     public Optional<Creature> checkPartyToAct() {
         if (creature.getHealth() < Config.CONFIG.creatureDefaultHealth("max")) {
-            Optional<Creature> food = selectVictimToEat(creature);
-            return food;
+            return selectVictimToEat(creature);
         }
         return Optional.empty();
     }
