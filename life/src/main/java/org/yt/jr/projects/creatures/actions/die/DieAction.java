@@ -30,7 +30,7 @@ public class DieAction implements Action {
                 lifeCycle.removeCreature(creature);
             }
         }
-        Logger.Log(LogSources.CREATURE, LogLevels.INFO,
+        Logger.Log(LogSources.ACTION, LogLevels.INFO,
                 String.format("%s successfully died", creatureString));
     }
 }
