@@ -46,9 +46,9 @@ public class CloneAction implements Action {
             }
         }
         if (result) {
-            Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s successfully cloned", parent));
+            Logger.Log(LogSources.ACTION, LogLevels.INFO, String.format("%s successfully cloned", parent));
         } else {
-            Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("%s failed to clone in cloneAction", parent));
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR, String.format("%s failed to clone in cloneAction", parent));
         }
     }
 }
