@@ -10,7 +10,7 @@ public class FoodMatrix {
 
     final public static FoodMatrix FOOD_MATRIX = new FoodMatrix();
 
-    final private HashMap<CreatureType, HashMap<CreatureType, Double>> foodMatrix = new HashMap();
+    final private Map<CreatureType, Map<CreatureType, Double>> foodMatrix = new HashMap();
 
     public void initFoodMatrix() {
         for (CreatureType eaterType : CreatureType.values()) {
@@ -37,7 +37,7 @@ public class FoodMatrix {
     }
 
     public void setProbability(final CreatureType eaterType, final CreatureType foodType, final Double probability) {
-        HashMap<CreatureType, Double> eaterMap = foodMatrix.get(eaterType);
+        Map<CreatureType, Double> eaterMap = foodMatrix.get(eaterType);
         if (eaterMap == null) {
             eaterMap = new HashMap<>();
             foodMatrix.put(eaterType, eaterMap);
