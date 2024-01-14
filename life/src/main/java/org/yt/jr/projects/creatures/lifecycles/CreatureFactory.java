@@ -5,6 +5,7 @@ import org.yt.jr.projects.creatures.Plant;
 import org.yt.jr.projects.creatures.animals.Deer;
 import org.yt.jr.projects.creatures.animals.Horse;
 import org.yt.jr.projects.creatures.CreatureType;
+import org.yt.jr.projects.creatures.animals.Wolf;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -16,7 +17,9 @@ public class CreatureFactory {
             CreatureType.PLANT, Plant::new,
 
             CreatureType.HORSE, Horse::new,
-            CreatureType.DEER, Deer::new
+            CreatureType.DEER, Deer::new,
+
+            CreatureType.WOLF, Wolf::new
     );
 
     public Function<Integer, Creature> getCreature(CreatureType type) {

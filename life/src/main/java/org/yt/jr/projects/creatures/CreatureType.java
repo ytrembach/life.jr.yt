@@ -5,8 +5,12 @@ import org.yt.jr.projects.creatures.lifecycles.LifeCycleType;
 public enum CreatureType {
     NONEXISTENT(LifeCycleType.EMPTY),
     PLANT(LifeCycleType.PLANTS),
+
     HORSE(LifeCycleType.HERBIVORES),
-    DEER(LifeCycleType.HERBIVORES);
+    DEER(LifeCycleType.HERBIVORES),
+
+    WOLF(LifeCycleType.CARNIVORES)
+    ;
 
     final private LifeCycleType lifeCycleType;
 
