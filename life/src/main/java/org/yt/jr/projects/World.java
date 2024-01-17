@@ -6,7 +6,6 @@ import org.yt.jr.projects.creatures.lifecycles.LifeCycleCreator;
 import org.yt.jr.projects.creatures.lifecycles.LifeCycleType;
 import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.maps.WorldMap;
-import org.yt.jr.projects.maps.WorldMapIterator;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
@@ -14,7 +13,6 @@ import org.yt.jr.projects.utils.logs.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
@@ -35,9 +33,7 @@ public class World {
         }
         Logger.initLogger(Config.getConfig().logFile());
 
-        WorldMap worldMap = WorldMap.getMap();
         FoodMatrix.FOOD_MATRIX.initFoodMatrix();
-
         startLifeCycles(LifeCycleType.values());
 
         try (BufferedReader console = new BufferedReader(new InputStreamReader(System.in))) {
@@ -74,7 +70,7 @@ public class World {
         }
     }
 
-    private static void stopLifeCycles(LifeCycleType... types) {
+    private static void stopLifeCycles() {
         for (LifeCycle lifeCycle : lifeCycles.values()) {
             lifeCycle.close();
         }
