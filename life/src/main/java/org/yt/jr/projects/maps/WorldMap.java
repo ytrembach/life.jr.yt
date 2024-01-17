@@ -5,7 +5,7 @@ import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 import java.util.Iterator;
-import static org.yt.jr.projects.maps.LocationNeighbors.*;
+import static org.yt.jr.projects.maps.NeighborDirection.*;
 
 public class WorldMap implements Iterable<Location> {
     final private int cols;
@@ -25,8 +25,8 @@ public class WorldMap implements Iterable<Location> {
     }
 
     private WorldMap() {
-        this.cols = Config.CONFIG.mapCols();
-        this.rows = Config.CONFIG.mapRows();
+        this.cols = Config.getConfig().mapCols();
+        this.rows = Config.getConfig().mapRows();
         this.grid = new Location[rows][cols];
     }
 
