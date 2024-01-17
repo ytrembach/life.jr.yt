@@ -5,27 +5,45 @@ import org.yt.jr.projects.creatures.lifecycles.LifeCycleType;
 import org.yt.jr.projects.utils.logs.LogLevels;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Properties;
 
 public class Config {
-    final private static String PROPERTIES_FILENAME = "life.properties";
+    final public static String PROPERTIES_FILENAME = "life.properties";
     final private static String LOGFILE_NAME = "life.log";
 
     final private Properties properties;
+    private static Config CONFIG;
 
-    public Config(final String propertiesFileName) {
-        try {
-            final String projectPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-            final String appConfigPath = projectPath + propertiesFileName;
-            properties = new Properties();
-            properties.load(new FileInputStream(appConfigPath));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    private Config(final String pathToConfig) throws IOException {
+        final String appConfigFile = pathToConfig;
+        properties = new Properties();
+        properties.load(new FileInputStream(appConfigFile));
+
+    }
+
+    private Config() throws IOException {
+        this(Thread.currentThread().getContextClassLoader().getResource("").getPath() + PROPERTIES_FILENAME);
+    }
+
+    public static void initConfig() throws IOException {
+        if (CONFIG == null) {
+            CONFIG = new Config();
         }
     }
 
-    final public static Config CONFIG = new Config(PROPERTIES_FILENAME);
+    public static void initConfig(final String pathToConfig) throws IOException {
+        if (CONFIG == null) {
+            CONFIG = new Config(pathToConfig);
+        }
+    }
+
+    public static Config getConfig() {
+        return CONFIG;
+    }
+
+    // final public static Config CONFIG; = new Config(PROPERTIES_FILENAME);
 
     // System
     public Path logFile() {
@@ -49,60 +67,76 @@ public class Config {
     }
 
     // Life Cycle
-    public int poolSize(LifeCycleType type) {
+    public int poolSize(final LifeCycleType type) {
         return Integer.parseInt(get(type, "pool.size"));
     }
 
-    public int turnsPerMove(LifeCycleType type) {
+    public int turnsPerMove(final LifeCycleType type) {
+
         return Integer.parseInt(get(type, "turns_per_move"));
     }
 
     // Creatures
-    public int creatureDefaultHealth(String key) {
-        return Integer.parseInt(get(CreatureType.NONEXISTENT, "health." + key));
+    public int creatureDefaultHealthMax(final CreatureType type) {
+        return Integer.parseInt(get(type, "health.max"));
     }
 
-    public int maxCreaturePerLocation(CreatureType type) {
+    public int creatureDefaultHealthChild(final CreatureType type) {
+        return Integer.parseInt(get(type, "health.child"));
+    }
+
+    public int maxCreaturePerLocation(final CreatureType type) {
         return Integer.parseInt(get(type, "per_location.max"));
     }
 
-    public Double initCreaturePerLocationShare(CreatureType type) {
-        return Double.parseDouble(get(type, "per_location.init"));
+    public float initCreaturePerLocationShare(final CreatureType type) {
+        return Float.parseFloat(get(type, "per_location.init_max"));
     }
 
-    public int turnsToReproduce(CreatureType type) {
+    public int turnsToReproduce(final CreatureType type) {
+
         return Integer.parseInt(get(type, "turns_per_reproduce"));
     }
 
-    public Double reproduceProbability(CreatureType type) {
-        return Double.parseDouble(get(type, "reproduce_probability"));
+    public float reproduceProbability(final CreatureType type) {
+        return Float.parseFloat(get(type, "reproduce_probability"));
     }
 
-    public int maxAge(CreatureType type) {
+    public int maxAge(final CreatureType type) {
         return Integer.parseInt(get(type, "max_age"));
     }
 
-    public int ownWeight(CreatureType type) {
-        return Integer.parseInt(get(type, "own_weight"));
+    public float ownWeight(final CreatureType type) {
+        return Float.parseFloat(get(type, "own_weight"));
     }
 
-    public int needFoodWeight(CreatureType type) {
-        return Integer.parseInt(get(type, "need_food_weight"));
+    public float needFoodWeight(final CreatureType type) {
+        return Float.parseFloat(get(type, "need_food_weight"));
     }
 
-    public int decreaseHealthPerMove(CreatureType type) {
+    public int eatAttemptsPerMove(final CreatureType type) {
+        return Integer.parseInt(get(type, "max_eat_attempts_per_move"));
+    }
+
+    public int decreaseHealthPerMove(final CreatureType type) {
         return Integer.parseInt(get(type, "decrease_health_per_move"));
     }
 
-    public Double getFoodMatrixValue(CreatureType eaterType, CreatureType foodType) {
-        final String prefix = "creature.food_matrix.";
-        String eaterTypeName = eaterType.name().toLowerCase();
-        String foodTypeName = foodType.name().toLowerCase();
-        String value = properties.getProperty(prefix + eaterTypeName + "." + foodTypeName);
-        return value != null ? Double.parseDouble(value) : 0;
+    public int maxStepsPerMove(final CreatureType type) {
+        return Integer.parseInt(get(type, "max_steps"));
     }
 
-    private <T> String get(T inputType, String key) {
+    // Food Matrix
+    public float foodMatrixValue(final CreatureType eaterType, final CreatureType foodType) {
+        final String prefix = "creature.food_matrix.";
+        final String eaterTypeName = eaterType.name().toLowerCase();
+        final String foodTypeName = foodType.name().toLowerCase();
+        final String value = properties.getProperty(prefix + eaterTypeName + "." + foodTypeName);
+        return value != null ? Float.parseFloat(value) : 0;
+    }
+
+    // get
+    private <T> String get(final T inputType, final String key) {
         String group = inputType.getClass().getSimpleName().toLowerCase().replace("type", "");
         String value = properties.getProperty(group + "." + inputType.toString().toLowerCase() + "." + key);
         if (value == null) {
