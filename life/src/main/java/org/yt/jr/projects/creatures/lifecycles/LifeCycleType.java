@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum LifeCycleType {
-    EMPTY,
     PLANTS,
     HERBIVORES,
     CARNIVORES;
