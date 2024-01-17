@@ -34,7 +34,7 @@ public class CloneAction implements Action {
                 if (parent.isReadyToReproduce(true)) {
                     parent.resetTurnsToReproduce();
                     child = CreatureFactory.CREATURE_FACTORY.getCreature(childType)
-                            .apply(Config.CONFIG.creatureDefaultHealth("child"));
+                            .apply(Config.getConfig().creatureDefaultHealthChild(childType));
                     synchronized (child) {
                         location.addCreature(child);
                         synchronized (lifeCycle) {
@@ -46,9 +46,11 @@ public class CloneAction implements Action {
             }
         }
         if (result) {
-            Logger.Log(LogSources.ACTION, LogLevels.INFO, String.format("%s successfully cloned", parent));
+            Logger.Log(LogSources.ACTION, LogLevels.INFO,
+                    String.format("%s successfully cloned", parent));
         } else {
-            Logger.Log(LogSources.ACTION, LogLevels.ERROR, String.format("%s failed to clone in cloneAction", parent));
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR,
+                    String.format("%s failed to clone in cloneAction", parent));
         }
     }
 }

@@ -21,9 +21,9 @@ public class CloneCheck implements Check {
     }
 
     @Override
-    public Optional<Creature> checkPartyToAct() {
+    public Optional<Creature> checkReadyToAct() {
         if (parent.isReadyToReproduce(false)) {
-            double probability = Config.CONFIG.reproduceProbability(childType);
+            float probability = Config.getConfig().reproduceProbability(childType);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
                 return Optional.of(parent);
             } else {
