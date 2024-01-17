@@ -21,16 +21,28 @@ public class EatAction implements Action {
 
     @Override
     public void doAction(final Creature food) {
+        boolean result = false;
+        final String foodString = food.toString();
+
         synchronized (less(eater, food)) {
             synchronized (more(eater, food)) {
-                Logger.Log(LogSources.ACTION, LogLevels.DEBUG, String.format("%s ate %s", eater, food));
-                float foodWeight = Config.CONFIG.ownWeight(food.getType());
-                float needFoodWeight = Config.CONFIG.needFoodWeight(eater.getType());
-                float maxHealth = Config.CONFIG.creatureDefaultHealth("max");
-                int newHealth = Math.round(Math.min(eater.getHealth() + foodWeight / needFoodWeight * maxHealth, maxHealth));
-                eater.setHealth(newHealth);
-                food.getDieAction().apply(food).doAction(food);
+                if (eater.getLocation().equals(food.getLocation())) {
+                    float foodWeight = Config.getConfig().ownWeight(food.getType());
+                    float needFoodWeight = Config.getConfig().needFoodWeight(eater.getType());
+                    float maxHealth = Config.getConfig().creatureDefaultHealthMax(eater.getType());
+                    int newHealth = Math.round(Math.min(eater.getHealth() + foodWeight / needFoodWeight * maxHealth, maxHealth));
+                    eater.setHealth(newHealth);
+                    food.getDieAction().apply(food).doAction(food);
+                    result = true;
+                }
             }
+        }
+        if (result) {
+            Logger.Log(LogSources.ACTION, LogLevels.INFO,
+                    String.format("%s ate %s", eater, foodString));
+        } else {
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR,
+                    String.format("%s failed to eat %s in EatAction", eater, foodString));
         }
     }
 }
