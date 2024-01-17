@@ -16,8 +16,8 @@ public class DieCheck implements Check {
     }
 
     @Override
-    public Optional<Creature> checkPartyToAct() {
-        final double maxAge = Config.CONFIG.maxAge(creature.getType());
+    public Optional<Creature> checkReadyToAct() {
+        final double maxAge = Config.getConfig().maxAge(creature.getType());
         final double deathProbability = -1 / Math.exp(1) * Math.log((maxAge - creature.getAge()) / maxAge);
         final double random = ThreadLocalRandom.current().nextDouble();
 

@@ -21,16 +21,26 @@ public class DieAction implements Action {
 
     @Override
     public void doAction(final Creature notUsed) {
+        boolean result = false;
         String creatureString = creature.toString();
         synchronized (creature) {
-            synchronized (location) {
-                location.removeCreature(creature);
-            }
-            synchronized (lifeCycle) {
-                lifeCycle.removeCreature(creature);
+            if (creature.isAlive()) {
+                synchronized (location) {
+                    location.removeCreature(creature);
+                    synchronized (lifeCycle) {
+                        lifeCycle.removeCreature(creature);
+                    }
+                    creature.setHealth(-1);
+                    result = true;
+                }
             }
         }
-        Logger.Log(LogSources.ACTION, LogLevels.INFO,
-                String.format("%s successfully died", creatureString));
+        if (result) {
+            Logger.Log(LogSources.ACTION, LogLevels.INFO,
+                    String.format("%s successfully died", creatureString));
+        } else {
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR,
+                    String.format("%s already dead now", creatureString));
+        }
     }
 }
