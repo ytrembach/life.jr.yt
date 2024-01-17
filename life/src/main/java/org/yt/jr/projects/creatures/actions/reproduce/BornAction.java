@@ -40,7 +40,7 @@ public class BornAction implements Action {
 
                         firstParent.resetTurnsToReproduce();
                         party.resetTurnsToReproduce();
-                        child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.CONFIG.creatureDefaultHealth("child"));
+                        child = CreatureFactory.CREATURE_FACTORY.getCreature(childType).apply(Config.getConfig().creatureDefaultHealthChild(childType));
                         synchronized (child) {
                             location.addCreature(child);
                             synchronized (lifeCycle) {
@@ -54,9 +54,11 @@ public class BornAction implements Action {
             }
         }
         if (result) {
-            Logger.Log(LogSources.ACTION, LogLevels.INFO, String.format("%s successfully paired with %s", firstParent, party));
+            Logger.Log(LogSources.ACTION, LogLevels.INFO,
+                    String.format("%s successfully paired with %s", firstParent, party));
         } else {
-            Logger.Log(LogSources.ACTION, LogLevels.ERROR, String.format("%s failed to pair in bordAction", firstParent));
+            Logger.Log(LogSources.ACTION, LogLevels.ERROR,
+                    String.format("%s failed to pair with %sin bornAction", firstParent, party));
         }
     }
 }

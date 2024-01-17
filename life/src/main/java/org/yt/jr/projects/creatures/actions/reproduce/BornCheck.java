@@ -8,6 +8,7 @@ import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
 import org.yt.jr.projects.utils.logs.Logger;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -22,9 +23,9 @@ public class BornCheck implements Check {
     }
 
     @Override
-    public Optional<Creature> checkPartyToAct() {
+    public Optional<Creature> checkReadyToAct() {
         if (firstParent.isReadyToReproduce(false)) {
-            double probability = Config.CONFIG.reproduceProbability(childType);
+            double probability = Config.getConfig().reproduceProbability(childType);
             if (ThreadLocalRandom.current().nextDouble() < probability) {
                 Optional<Creature> found = findPairToReproduce(firstParent);
                 if (found.isPresent()) {
@@ -41,7 +42,7 @@ public class BornCheck implements Check {
 
     public static Optional<Creature> findPairToReproduce(final Creature parent) {
         final CreatureType type = parent.getType();
-        return parent.getLocation().getHabitants().stream()
+        return List.copyOf(parent.getLocation().getHabitants()).stream()
                 .filter(creature -> creature.getType().equals(type))
                 .filter(creature -> creature.isReadyToReproduce(false))
                 .filter(creature -> parent != creature)
