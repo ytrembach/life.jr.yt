@@ -13,7 +13,7 @@ public class Plant extends Creature {
 
     @Override
     protected void tryToReproduce() {
-        if (reproduceCheck.apply(this).checkPartyToAct().isPresent()) {
+        if (reproduceCheck.apply(this).checkReadyToAct().isPresent()) {
             reproduceAction.apply(this).doAction(this);
         }
     }
