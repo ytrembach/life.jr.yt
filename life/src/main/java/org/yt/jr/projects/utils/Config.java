@@ -17,9 +17,8 @@ public class Config {
     private static Config CONFIG;
 
     private Config(final String pathToConfig) throws IOException {
-        final String appConfigFile = pathToConfig;
         properties = new Properties();
-        properties.load(new FileInputStream(appConfigFile));
+        properties.load(new FileInputStream(pathToConfig));
 
     }
 
