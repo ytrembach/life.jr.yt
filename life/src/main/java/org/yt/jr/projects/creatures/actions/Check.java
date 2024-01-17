@@ -6,5 +6,5 @@ import java.util.Optional;
 
 @FunctionalInterface
 public interface Check {
-    Optional<Creature> checkPartyToAct();
+    Optional<Creature> checkReadyToAct();
 }
