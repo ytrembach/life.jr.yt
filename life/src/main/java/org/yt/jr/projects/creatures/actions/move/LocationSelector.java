@@ -20,13 +20,11 @@ public class LocationSelector {
             candidates = candidates
                     .flatMap(candidate ->
                     {
-                        List<Location> withNeighbors = new ArrayList();
+                        ArrayList<Location> withNeighbors = new ArrayList<>();
                         withNeighbors.add(candidate);
                         for (NeighborDirection direction : NeighborDirection.values()) {
                             Optional<Location> neighbor = candidate.getNeighbor(direction);
-                            if (neighbor.isPresent()) {
-                                withNeighbors.add(neighbor.get());
-                            }
+                            neighbor.ifPresent(withNeighbors::add);
                         }
                         return withNeighbors.stream();
                     })
