@@ -36,7 +36,7 @@ public abstract class Creature implements Runnable {
         this.id = lastId.addAndGet(1);
         this.type = type;
         this.health = health;
-        turnsToReproduce = ThreadLocalRandom.current().nextInt(0, Config.CONFIG.turnsToReproduce(type));
+        turnsToReproduce = ThreadLocalRandom.current().nextInt(0, Config.getConfig().turnsToReproduce(type));
     }
 
     public CreatureType getType() {
@@ -72,7 +72,7 @@ public abstract class Creature implements Runnable {
     }
 
     public void resetTurnsToReproduce() {
-        this.turnsToReproduce = Config.CONFIG.turnsToReproduce(type);
+        this.turnsToReproduce = Config.getConfig().turnsToReproduce(type);
     }
 
     @Override
@@ -104,36 +104,51 @@ public abstract class Creature implements Runnable {
 
     @Override
     public void run() {
-        increaseAge();
-        decreaseHealth();
+        try {
+            if (!isAlive()) {
+                return;
+            }
 
-        tryToDie();
+            increaseAge();
+            decreaseHealth();
 
-        decreaseTurnsToReproduce();
-        tryToReproduce();
+            tryToDie();
+
+            if (isAlive()) {
+                decreaseTurnsToReproduce();
+                tryToReproduce();
+            }
+        } catch (Exception e) {
+            Logger.Log(LogSources.CREATURE, LogLevels.ERROR, String.format("Exception %s, message: %s", e, e.getMessage()));
+            for (StackTraceElement el : e.getStackTrace()) {
+                Logger.Log(LogSources.CREATURE, LogLevels.ERROR, el.toString());
+            }
+        }
     }
 
     // general
     private void increaseAge() {
         synchronized (this) {
-            age += Config.CONFIG.turnsPerMove(type.getLifeCycleType());
+            age += Config.getConfig().turnsPerMove(type.getLifeCycleType());
         }
     }
 
     private void decreaseHealth() {
         synchronized (this) {
             health = Math.max(health -
-                    Config.CONFIG.decreaseHealthPerMove(type) *
-                            Config.CONFIG.turnsPerMove(type.getLifeCycleType()), 0);
+                    Config.getConfig().decreaseHealthPerMove(type) *
+                            Config.getConfig().turnsPerMove(type.getLifeCycleType()), 0);
         }
+    }
+
+    public boolean isAlive() {
+        return health >= 0;
     }
 
     // die
     private void tryToDie() {
-        if (dieCheck.apply(this).checkPartyToAct().isPresent()) {
+        if (dieCheck.apply(this).checkReadyToAct().isPresent()) {
             dieAction.apply(this).doAction(this);
-            age = 0;
-            health = 0;
         }
     }
 
@@ -142,7 +157,7 @@ public abstract class Creature implements Runnable {
 
     private void decreaseTurnsToReproduce() {
         synchronized (this) {
-            turnsToReproduce = Math.max(turnsToReproduce - Config.CONFIG.turnsPerMove(type.getLifeCycleType()), 0);
+            turnsToReproduce = Math.max(turnsToReproduce - Config.getConfig().turnsPerMove(type.getLifeCycleType()), 0);
         }
     }
 
@@ -162,9 +177,6 @@ public abstract class Creature implements Runnable {
     }
 
     private boolean checkTurnsToReproduce(boolean writeLogOnError) {
-        if (type.equals(CreatureType.NONEXISTENT)) {
-            return false;
-        }
         if (turnsToReproduce > 0) {
             if (writeLogOnError) {
                 Logger.Log(LogSources.CREATURE, LogLevels.ERROR,
