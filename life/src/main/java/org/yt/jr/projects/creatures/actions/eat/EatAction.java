@@ -2,7 +2,6 @@ package org.yt.jr.projects.creatures.actions.eat;
 
 import org.yt.jr.projects.creatures.Creature;
 import org.yt.jr.projects.creatures.actions.Action;
-import org.yt.jr.projects.maps.Location;
 import org.yt.jr.projects.utils.Config;
 import org.yt.jr.projects.utils.logs.LogLevels;
 import org.yt.jr.projects.utils.logs.LogSources;
