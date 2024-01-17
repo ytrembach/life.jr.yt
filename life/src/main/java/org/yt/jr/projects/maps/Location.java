@@ -17,8 +17,8 @@ public class Location {
     final private int row;
     final private int col;
 
-    // neighboring locations
-    final private Map<LocationNeighbors, Location> neighbors;
+    final private Map<NeighborDirection, Location> neighbors;
+
     final private ArrayList<Creature> habitants;
 
     final private Map<CreatureType, Integer> creaturesCount;
@@ -59,11 +59,19 @@ public class Location {
                 '}';
     }
 
-    void setNeighbor(LocationNeighbors direction, Location neighbor) {
+    public Optional<Location> getNeighbor(final NeighborDirection direction) {
+        final Location neighbor = neighbors.get(direction);
+        return neighbor != null ? Optional.of(neighbor) : Optional.empty();
+    }
+
+    void setNeighbor(NeighborDirection direction, Location neighbor) {
         this.neighbors.put(direction, neighbor);
     }
 
     public void addCreature(Creature creature) {
+        if (this == NOWHERE) {
+            return;
+        }
         CreatureType type = creature.getType();
         habitants.add(creature);
         creature.setLocation(this);
@@ -72,10 +80,13 @@ public class Location {
     }
 
     public void removeCreature(Creature creature) {
+        if (this == NOWHERE) {
+            return;
+        }
         CreatureType type = creature.getType();
         habitants.remove(creature);
         creaturesCount.put(type, creaturesCount.get(type) - 1);
-        Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s removed from %s", creature, this));
+        Logger.Log(LogSources.CREATURE, LogLevels.INFO, String.format("%s deleted from %s", creature, this));
         creature.setLocation(NOWHERE);
     }
 
@@ -83,7 +94,7 @@ public class Location {
         if (this == NOWHERE) {
             return false;
         }
-        if (creaturesCount.get(type) >= Config.CONFIG.maxCreaturePerLocation(type)) {
+        if (creaturesCount.get(type) >= Config.getConfig().maxCreaturePerLocation(type)) {
             if (writeLogOnError) {
                 Logger.Log(LogSources.CREATURE, LogLevels.DEBUG,
                         String.format("No slots for %s on %s", type, this));
@@ -92,4 +103,14 @@ public class Location {
         }
         return true;
     }
+
+    // static comparison - to lock in order
+    public static Location more(Location first, Location second) {
+        return first.getId() > second.getId() ? first : second;
+    }
+
+    public static Location less(Location first, Location second) {
+        return first.getId() < second.getId() ? first : second;
+    }
+
 }
