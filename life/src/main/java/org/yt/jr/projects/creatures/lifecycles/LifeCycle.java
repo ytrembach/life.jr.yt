@@ -24,7 +24,7 @@ public class LifeCycle implements AutoCloseable {
         this.type = type;
         liveCreatures = new HashMap<>();
 
-        int poolSize = Config.CONFIG.poolSize(type);
+        int poolSize = Config.getConfig().poolSize(type);
         executorService = Executors.newScheduledThreadPool(poolSize,
                 (r) -> new Thread(r, type.name().charAt(0) + "="));
     }
@@ -41,11 +41,11 @@ public class LifeCycle implements AutoCloseable {
     }
 
     public void addCreature(Creature creature) {
-        long turnsPerMove = Config.CONFIG.turnsPerMove(type);
+        long turnsPerMove = Config.getConfig().turnsPerMove(type);
         synchronized (liveCreatures) {
             final long period = ThreadLocalRandom.current().nextInt(900, 1100) // smoothening
                     * turnsPerMove
-                    * Config.CONFIG.turnDurationInSeconds();
+                    * Config.getConfig().turnDurationInSeconds();
             ScheduledFuture<?> future = executorService.scheduleAtFixedRate(creature,
                     period, period,
                     TimeUnit.MILLISECONDS);
@@ -57,6 +57,9 @@ public class LifeCycle implements AutoCloseable {
 
     public void removeCreature(Creature creature) {
         ScheduledFuture<?> future = liveCreatures.get(creature);
+        if (future == null) {
+            return;
+        }
         synchronized (liveCreatures) {
             if (!future.cancel(true) || !future.isDone()) {
                 Logger.Log(LogSources.LIFECYCLE, LogLevels.DEBUG,
