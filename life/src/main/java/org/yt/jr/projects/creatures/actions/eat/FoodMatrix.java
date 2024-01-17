@@ -10,38 +10,27 @@ public class FoodMatrix {
 
     final public static FoodMatrix FOOD_MATRIX = new FoodMatrix();
 
-    final private Map<CreatureType, Map<CreatureType, Double>> foodMatrix = new HashMap();
+    final private Map<CreatureType, Map<CreatureType, Float>> foodMatrix = new HashMap<>();
 
     public void initFoodMatrix() {
         for (CreatureType eaterType : CreatureType.values()) {
             for (CreatureType foodType : CreatureType.values()) {
-                if (eaterType == CreatureType.NONEXISTENT ||
-                        foodType == CreatureType.NONEXISTENT) {
-                    continue;
-                }
-                setProbability(eaterType, foodType, Config.CONFIG.getFoodMatrixValue(eaterType, foodType));
+                setProbability(eaterType, foodType, Config.getConfig().foodMatrixValue(eaterType, foodType));
             }
         }
     }
 
-    public Double getProbability(final CreatureType eaterType, final CreatureType foodType) {
-        Map<CreatureType, Double> eaterMap = foodMatrix.get(eaterType);
+    public float getProbability(final CreatureType eaterType, final CreatureType foodType) {
+        Map<CreatureType, Float> eaterMap = foodMatrix.get(eaterType);
+        float probability = 0;
         if (eaterMap != null) {
-            Double probability;
             probability = eaterMap.get(foodType);
-            if (probability != null) {
-                return probability;
-            }
         }
-        return 0D;
+        return probability;
     }
 
-    public void setProbability(final CreatureType eaterType, final CreatureType foodType, final Double probability) {
-        Map<CreatureType, Double> eaterMap = foodMatrix.get(eaterType);
-        if (eaterMap == null) {
-            eaterMap = new HashMap<>();
-            foodMatrix.put(eaterType, eaterMap);
-        }
+    public void setProbability(final CreatureType eaterType, final CreatureType foodType, final float probability) {
+        Map<CreatureType, Float> eaterMap = foodMatrix.computeIfAbsent(eaterType, k -> new HashMap<>());
         eaterMap.put(foodType, probability);
     }
 }
