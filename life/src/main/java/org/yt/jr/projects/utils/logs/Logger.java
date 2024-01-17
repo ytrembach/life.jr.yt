@@ -37,7 +37,7 @@ public class Logger {
     }
 
     public static void Log(LogSources source, LogLevels level, String message) {
-        if (level.ordinal() < Config.CONFIG.logLevel().ordinal()) {
+        if (level.ordinal() < Config.getConfig().logLevel().ordinal()) {
             return;
         }
         LocalDateTime now = LocalDateTime.now();
